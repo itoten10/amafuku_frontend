@@ -8,12 +8,15 @@ const nextConfig = {
   // experimental: {
   //   optimizeCss: true, // crittersモジュール不足のためコメントアウト
   // },
-  // 静的エクスポート用（Azure Static Web Appsで必要な場合）
-  output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
+  // Azure Static Web Apps最適化設定
+  output: 'export',
   trailingSlash: true,
+  distDir: 'out',
   images: {
     unoptimized: true
-  }
+  },
+  // エラーページのカスタマイズ
+  generateEtags: false
 }
 
 module.exports = nextConfig
