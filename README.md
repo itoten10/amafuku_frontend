@@ -1,94 +1,93 @@
-# Githubリポジトリの初期化→プッシュまで
+# 🚗 Famoly Drive Frontend
 
-## 1. カレントディレクトリをGitリポジトリとして初期化
-git init
+## 概要
 
-## 2. ファイルをステージングエリアに追加
-git add .
+Famoly Drive（家族向け教育ドライブアプリ）のフロントエンドアプリケーション。
+家族でドライブ中に歴史を学べる教育プラットフォームを提供します。
 
-## 3. 初期コミットを作成
-git commit -m "Initial commit"
+## 主な機能
 
-## 4. リモートリポジトリのURLを追加（URLは実際のものに置き換えてください）
-git remote add origin your-repository-url
+- 🗺️ **教育強化ルート検索**: 目的地までの経路に沿って歴史スポットを自動検出
+- 📍 **地理的分散ロジック**: ルートを10区間に分割して均等にスポット配置
+- 🤖 **AIクイズ生成**: OpenAI APIを使用した動的クイズ作成
+- 📊 **スコア管理**: 学習進度とランキング表示
+- 🎯 **難易度調整**: 小学生・中学生・高校生レベル対応
 
-## 5. ローカルのmainブランチをリモートにプッシュ
-git push -u origin main
+## 技術スタック
 
+- **Framework**: Next.js 15 + TypeScript
+- **Styling**: Tailwind CSS
+- **Maps**: Google Maps JavaScript API
+- **State Management**: React hooks
+- **Notifications**: react-hot-toast
+- **Icons**: Lucide React
 
-## 環境変数備忘
-NODE_ENV:production
-PORT:3000
+## 環境構築
 
+### 依存関係インストール
+```bash
+npm install
+```
 
-# YAML修正
+### 環境変数設定
+```bash
+cp .env.example .env.local
+```
 
-name: Build and deploy Node.js app to Azure Web App - tech0-gen9-step32-webapp-frontend
+`.env.local` に以下を設定：
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+```
 
-on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+### 開発サーバー起動
+```bash
+npm run dev
+```
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+アプリケーションが `http://localhost:3001` で起動します。
 
-    steps:
-      - uses: actions/checkout@v4
+## デプロイ（Azure Static Web Apps）
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'
+### 環境変数
+```
+NEXT_PUBLIC_API_URL=https://your-backend-api.azurewebsites.net
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+```
 
-      - name: npm install, build, and test
-      #1
-        env:
-          NEXT_PUBLIC_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+### ビルド設定
+- **Build command**: `npm run build`
+- **Output location**: `out/`
+- **Node.js version**: 18.x
 
-      #2
-      - name: Copy artifact for deployment job
-        run: |
-          mkdir deploy
-          cp -r ./.next/standalone/. ./deploy
-          cp -r ./.next/static/. ./deploy/.next/static
+## 主要コンポーネント
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./deploy -r #3
+### 🗺️ 地図コンポーネント
+- `EnhancedGoogleMapRoute.tsx`: Google Maps統合版
+- `EnhancedSampleMapRoute.tsx`: サンプルモード版
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: release.zip
+### 🎯 クイズシステム
+- `AIQuizPanel.tsx`: OpenAI統合クイズ生成
+- `WorkingQuizPanel.tsx`: 基本クイズ機能
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
+## 地理的分散アルゴリズム
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-      
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'tech0-gen9-step32-webapp-frontend'
-          slot-name: 'Production'
-          package: ./deploy #4
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_718598C9C5AF48328C5F64B41696FD40 }}
+1. **ルート分割**: 経路を10等分区間に分割
+2. **区間別検索**: 各区間8km圏内で歴史スポット検索
+3. **教育価値評価**: 国宝・重要文化財を優先
+4. **重複排除**: 最小1km間隔での分散配置
+
+## サンプルルート
+
+- **東京駅 → 鎌倉駅**: 鎌倉大仏、鶴岡八幡宮、建長寺
+- **東京 → 京都**: 清水寺、金閣寺、伏見稲荷大社
+- **その他**: 浅草寺、明治神宮、東京国立博物館
+
+## デプロイ準備済み ✅
+
+このフロントエンドはAzure Static Web Apps環境でのデプロイ用に最適化されています。
+
+---
+
+## 🔄 バックアップ情報
+以前の顧客管理フロントエンドは `backup-customer-frontend` ブランチに保存されています。

@@ -1,8 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  reactStrictMode: true,
   env: {
-    API_ENDPOINT: process.env.API_ENDPOINT,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  },
+  // デプロイ最適化
+  swcMinify: true,
+  experimental: {
+    optimizeCss: true,
+  },
+  // 静的エクスポート用（Azure Static Web Appsで必要な場合）
+  output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
+  trailingSlash: true,
+  images: {
+    unoptimized: true
   }
 }
 
