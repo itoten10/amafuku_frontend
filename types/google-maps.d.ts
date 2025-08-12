@@ -48,7 +48,7 @@ declare namespace google {
     
     class InfoWindow {
       constructor(opts?: InfoWindowOptions)
-      open(map?: Map, anchor?: Marker): void
+      open(map?: Map | null, anchor?: Marker): void
       close(): void
       addListener(eventName: string, handler: Function): MapsEventListener
     }
