@@ -36,7 +36,7 @@ cp .env.example .env.local
 
 `.env.local` に以下を設定：
 ```
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=https://app-002-gen10-step3-2-py-oshima8.azurewebsites.net
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 ```
 
@@ -51,7 +51,7 @@ npm run dev
 
 ### 環境変数
 ```
-NEXT_PUBLIC_API_URL=https://your-backend-api.azurewebsites.net
+NEXT_PUBLIC_API_URL=https://app-002-gen10-step3-2-py-oshima8.azurewebsites.net
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 ```
 
@@ -83,8 +83,15 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 - **東京 → 京都**: 清水寺、金閣寺、伏見稲荷大社
 - **その他**: 浅草寺、明治神宮、東京国立博物館
 
-## デプロイ準備済み ✅
+## 🎉 デプロイ状況
 
+### バックエンド: **デプロイ完了** ✅
+- **URL**: https://app-002-gen10-step3-2-py-oshima8.azurewebsites.net  
+- **OpenAI統合**: 完全動作確認済み
+- **AIクイズ生成**: テスト成功
+- **API応答**: 正常稼働中
+
+### フロントエンド: **デプロイ準備完了** 🚀
 このフロントエンドはAzure Static Web Apps環境でのデプロイ用に最適化されています。
 
 ---

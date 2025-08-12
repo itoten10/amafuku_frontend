@@ -39,8 +39,8 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
     setLoading(true)
 
     try {
-      // バックエンドのOpenAI APIエンドポイントを呼び出し
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      // バックエンドのOpenAI APIエンドポイントを呼び出し（本番環境対応）
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://app-002-gen10-step3-2-py-oshima8.azurewebsites.net'
       const response = await fetch(`${API_BASE_URL}/api/v1/quizzes/generate-ai`, {
         method: 'POST',
         headers: {
