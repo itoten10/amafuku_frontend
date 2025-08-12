@@ -4,19 +4,13 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://app-002-gen10-step3-2-py-oshima8.azurewebsites.net',
   },
-  // デプロイ最適化（swcMinifyはNext.js 15で標準となり非推奨）
-  // experimental: {
-  //   optimizeCss: true, // crittersモジュール不足のためコメントアウト
-  // },
-  // Azure Static Web Apps最適化設定
-  output: 'export',
-  trailingSlash: true,
-  distDir: 'out',
+  // Azure App Service用設定（サーバーサイドレンダリング対応）
+  // output: 'export' を削除してスタンドアロンモードを有効化
+  output: 'standalone',
+  // 画像最適化は無効のまま（Azure App Service制限対応）
   images: {
     unoptimized: true
-  },
-  // エラーページのカスタマイズ
-  generateEtags: false
+  }
 }
 
 module.exports = nextConfig
