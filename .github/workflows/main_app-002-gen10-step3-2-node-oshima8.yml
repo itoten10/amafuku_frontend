@@ -50,12 +50,10 @@ jobs:
           # Create a clean package for deployment
           mkdir -p deploy-package
           
-          # Copy essential files with error handling
+          # Copy essential files for Next.js deployment
           cp -r .next deploy-package/
-          cp -r public deploy-package/ 2>/dev/null || echo "No public directory, creating empty one" && mkdir -p deploy-package/public
-          cp server.js deploy-package/
+          cp -r public deploy-package/ 2>/dev/null || (echo "No public directory, creating empty one" && mkdir -p deploy-package/public)
           cp package.json deploy-package/
-          cp web.config deploy-package/
           cp next.config.js deploy-package/
           
           # Copy source files (required for Next.js)

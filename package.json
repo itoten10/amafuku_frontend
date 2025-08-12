@@ -7,11 +7,9 @@
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3001", 
     "build": "next build",
-    "start": "next start -p $PORT",
-    "start:azure": "next start -p $PORT",
-    "start:custom": "node server.js", 
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
