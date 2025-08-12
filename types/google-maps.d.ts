@@ -23,6 +23,11 @@ declare namespace google {
     class Marker {
       constructor(opts: MarkerOptions)
       setMap(map: Map | null): void
+      addListener(eventName: string, handler: Function): MapsEventListener
+    }
+    
+    interface MapsEventListener {
+      remove(): void
     }
     
     interface MarkerOptions {
@@ -42,9 +47,14 @@ declare namespace google {
     }
     
     class InfoWindow {
-      constructor(opts?: any)
+      constructor(opts?: InfoWindowOptions)
       open(map?: Map, anchor?: Marker): void
       close(): void
+      addListener(eventName: string, handler: Function): MapsEventListener
+    }
+    
+    interface InfoWindowOptions {
+      content?: string | Element
     }
     
     interface DirectionsRoute {
