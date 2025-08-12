@@ -247,7 +247,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
               if (processedPlaceIds.has(place.place_id)) return false
               
               // 日本史教育価値の判定
-              const name = place.name.toLowerCase()
+              const name = place.name!.toLowerCase() // 上でnullチェック済み
               const types = place.types || []
               
               // 避けるべき場所（商業施設、現代施設など）
@@ -265,9 +265,9 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
                 '明治', '文明開化', '産業遺産'
               ]
               
-              const hasHighValueKeyword = highValueKeywords.some(keyword => 
-                place.name.includes(keyword)
-              )
+              const hasHighValueKeyword = place.name ? highValueKeywords.some(keyword => 
+                place.name!.includes(keyword)
+              ) : false
               
               // 歴史・文化関連の場所を優先
               const preferTypes = ['museum', 'place_of_worship', 'tourist_attraction', 'establishment']
