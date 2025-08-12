@@ -28,14 +28,32 @@ jobs:
           npm install
           npm run build
 
+      - name: Prepare deployment files
+        run: |
+          # standaloneディレクトリが存在する場合の対応
+          if [ -d ".next/standalone" ]; then
+            echo "Standalone build found"
+            # standaloneファイルをルートにコピー
+            cp -r .next/standalone/* ./
+            # staticファイルをコピー
+            mkdir -p .next/static
+            cp -r .next/static .next/
+            # publicファイルをコピー
+            cp -r public ./
+          else
+            echo "No standalone build found"
+            ls -la .next/
+          fi
+          
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
           path: |
-            .next/standalone/
-            .next/static/
+            .next/
             public/
+            server.js
+            package.json
             !node_modules/
 
   deploy:
