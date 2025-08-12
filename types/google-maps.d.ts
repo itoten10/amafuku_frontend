@@ -44,6 +44,9 @@ declare namespace google {
       origin: string
       destination: string
       travelMode: any
+      language?: string
+      avoidHighways?: boolean
+      avoidTolls?: boolean
     }
     
     enum TravelMode {
