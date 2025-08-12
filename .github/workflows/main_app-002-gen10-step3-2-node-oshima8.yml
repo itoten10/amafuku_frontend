@@ -45,25 +45,30 @@ jobs:
             ls -la .next/
           fi
           
+      - name: Create deployment package
+        run: |
+          # Create a clean package for deployment
+          mkdir -p deploy-package
+          cp -r .next deploy-package/
+          cp -r public deploy-package/
+          cp server.js deploy-package/
+          cp package.json deploy-package/
+          cp web.config deploy-package/
+          cp next.config.js deploy-package/
+          # Copy source files
+          cp -r types deploy-package/ 2>/dev/null || echo "No types directory"
+          cp -r components deploy-package/
+          cp -r app deploy-package/
+          # Copy config files
+          cp tailwind.config.js deploy-package/ 2>/dev/null || echo "No tailwind config"
+          cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
+          cp tsconfig.json deploy-package/
+          
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: |
-            .next/
-            public/
-            server.js
-            package.json
-            web.config
-            types/
-            components/
-            app/
-            next.config.js
-            tailwind.config.js
-            postcss.config.js
-            tsconfig.json
-            !node_modules/
-            !**/*.log
+          path: deploy-package/
 
   deploy:
     runs-on: ubuntu-latest

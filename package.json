@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "node server.js",
-    "start:azure": "node server.js", 
-    "start:next": "next start",
+    "start": "next start -p $PORT",
+    "start:azure": "next start -p $PORT",
+    "start:custom": "node server.js", 
     "lint": "next lint"
   },
   "dependencies": {
