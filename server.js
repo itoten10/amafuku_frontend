@@ -1,14 +1,22 @@
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
+const path = require('path')
 
-console.log('Starting Famoly Drive server...')
-console.log('NODE_ENV:', process.env.NODE_ENV)
-console.log('PORT:', process.env.PORT)
+console.log('🚀 Starting Famoly Drive server...')
+console.log('📊 Environment:', {
+  NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
+  PWD: process.cwd(),
+  NODE_VERSION: process.version
+})
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = '0.0.0.0'
 const port = process.env.PORT || 8080
+
+// Azure App Service用の設定
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 console.log('Server configuration:', { dev, hostname, port })
 

@@ -54,9 +54,14 @@ jobs:
             public/
             server.js
             package.json
+            web.config
             types/
             components/
             app/
+            next.config.js
+            tailwind.config.js
+            postcss.config.js
+            tsconfig.json
             !node_modules/
             !**/*.log
 
