@@ -54,7 +54,11 @@ jobs:
             public/
             server.js
             package.json
+            types/
+            components/
+            app/
             !node_modules/
+            !**/*.log
 
   deploy:
     runs-on: ubuntu-latest
