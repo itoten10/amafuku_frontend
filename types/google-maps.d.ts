@@ -80,6 +80,13 @@ declare namespace google {
         radius: number
         type?: string
         keyword?: string
+        language?: string
+      }
+      
+      interface PlaceDetailsRequest {
+        placeId: string
+        fields?: string[]
+        language?: string
       }
       
       enum PlacesServiceStatus {
