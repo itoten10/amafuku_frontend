@@ -46,6 +46,9 @@ jobs:
           cp package.json deploy-package/
           cp next.config.js deploy-package/
           
+          # Copy node_modules (essential for Azure deployment)
+          cp -r node_modules deploy-package/ 2>/dev/null || echo "No node_modules directory"
+          
           # Copy source files (required for Next.js)
           cp -r types deploy-package/ 2>/dev/null || echo "No types directory"
           cp -r components deploy-package/ 2>/dev/null || echo "No components directory"
@@ -59,6 +62,8 @@ jobs:
           # List what we're deploying
           echo "📦 Deployment package contents:"
           ls -la deploy-package/
+          echo "📦 node_modules/.bin contents:"
+          ls -la deploy-package/node_modules/.bin/ 2>/dev/null || echo "No .bin directory"
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
