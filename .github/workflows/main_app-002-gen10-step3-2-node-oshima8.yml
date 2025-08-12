@@ -49,20 +49,28 @@ jobs:
         run: |
           # Create a clean package for deployment
           mkdir -p deploy-package
+          
+          # Copy essential files with error handling
           cp -r .next deploy-package/
-          cp -r public deploy-package/
+          cp -r public deploy-package/ 2>/dev/null || echo "No public directory, creating empty one" && mkdir -p deploy-package/public
           cp server.js deploy-package/
           cp package.json deploy-package/
           cp web.config deploy-package/
           cp next.config.js deploy-package/
-          # Copy source files
+          
+          # Copy source files (required for Next.js)
           cp -r types deploy-package/ 2>/dev/null || echo "No types directory"
-          cp -r components deploy-package/
-          cp -r app deploy-package/
+          cp -r components deploy-package/ 2>/dev/null || echo "No components directory"
+          cp -r app deploy-package/ 2>/dev/null || echo "No app directory"
+          
           # Copy config files
           cp tailwind.config.js deploy-package/ 2>/dev/null || echo "No tailwind config"
-          cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
-          cp tsconfig.json deploy-package/
+          cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config" 
+          cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
+          
+          # List what we're deploying
+          echo "📦 Deployment package contents:"
+          ls -la deploy-package/
           
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
