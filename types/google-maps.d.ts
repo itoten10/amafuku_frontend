@@ -21,8 +21,24 @@ declare namespace google {
     }
     
     class Marker {
-      constructor(opts: any)
+      constructor(opts: MarkerOptions)
       setMap(map: Map | null): void
+    }
+    
+    interface MarkerOptions {
+      position: LatLng | LatLngLiteral
+      map?: Map
+      title?: string
+      icon?: string | MarkerIcon
+    }
+    
+    interface MarkerIcon {
+      url: string
+    }
+    
+    interface LatLngLiteral {
+      lat: number
+      lng: number
     }
     
     class InfoWindow {
@@ -68,11 +84,15 @@ declare namespace google {
         place_id?: string
         name?: string
         vicinity?: string
+        formatted_address?: string
         geometry?: {
-          location: LatLng
+          location?: LatLng
         }
         types?: string[]
         rating?: number
+        opening_hours?: any
+        website?: string
+        photos?: any[]
       }
       
       interface PlaceSearchRequest {
