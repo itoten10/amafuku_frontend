@@ -95,7 +95,10 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
       language: 'ja'
     })
 
+    console.log('🗺️ Google Maps Loader created with API key:', `${GOOGLE_MAPS_API_KEY.substring(0, 10)}...`)
+
     loader.load().then(() => {
+      console.log('✅ Google Maps API loaded successfully')
       if (!mapRef.current) return
 
       const map = new google.maps.Map(mapRef.current, {
@@ -104,6 +107,8 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
         mapTypeControl: true,
         streetViewControl: true
       })
+
+      console.log('✅ Google Maps instance created')
 
       mapInstanceRef.current = map
       directionsServiceRef.current = new google.maps.DirectionsService()

@@ -294,11 +294,14 @@ export function EnhancedSampleMapRoute({ onRouteFound, onSpotsFound }: EnhancedS
   }
 
   const searchRoute = () => {
+    console.log('🔍 Sample mode search triggered:', { origin, destination })
+    
     if (!origin.trim() || !destination.trim()) {
       toast.error('出発地と目的地を入力してください')
       return
     }
 
+    console.log('✅ Starting sample route search')
     setLoading(true)
 
     setTimeout(() => {

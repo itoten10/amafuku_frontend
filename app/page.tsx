@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { EnhancedGoogleMapRoute } from '@/components/EnhancedGoogleMapRoute'
 import { EnhancedSampleMapRoute } from '@/components/EnhancedSampleMapRoute'
 import { WorkingQuizPanel } from '@/components/WorkingQuizPanel'
@@ -33,7 +33,7 @@ export default function Home() {
   const [quizMode, setQuizMode] = useState<'basic' | 'ai'>('basic')
 
   // Google Maps APIの可用性をチェック
-  useState(() => {
+  useEffect(() => {
     // 環境変数でAPIキーが設定されているかチェック
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     const hasValidApiKey = apiKey && apiKey !== 'your-google-maps-api-key-here'
@@ -46,7 +46,7 @@ export default function Home() {
     console.log('Maps available:', !!hasValidApiKey)
     
     setIsGoogleMapsAvailable(!!hasValidApiKey)
-  })
+  }, [])
 
   const handleRouteFound = (routeInfo: RouteInfo) => {
     setCurrentRoute(routeInfo)
