@@ -32,10 +32,12 @@ export default function Home() {
   const [isGoogleMapsAvailable, setIsGoogleMapsAvailable] = useState(false)
   const [quizMode, setQuizMode] = useState<'basic' | 'ai'>('basic')
 
-  // Google Maps APIの可用性をチェック（現在は無効化してサンプルモードを使用）
+  // Google Maps APIの可用性をチェック
   useState(() => {
-    // Google Maps APIが設定されていない、または有効化されていない場合はサンプルモードを使用
-    setIsGoogleMapsAvailable(true) // 一時的にfalseに固定してサンプルモードを使用
+    // 環境変数でAPIキーが設定されているかチェック
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    const hasValidApiKey = apiKey && apiKey !== 'your-google-maps-api-key-here'
+    setIsGoogleMapsAvailable(!!hasValidApiKey)
   })
 
   const handleRouteFound = (routeInfo: RouteInfo) => {
