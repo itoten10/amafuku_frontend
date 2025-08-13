@@ -37,6 +37,14 @@ export default function Home() {
     // 環境変数でAPIキーが設定されているかチェック
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     const hasValidApiKey = apiKey && apiKey !== 'your-google-maps-api-key-here'
+    
+    // デバッグ情報をコンソールに出力
+    console.log('🗺️ Google Maps API Debug:')
+    console.log('API Key exists:', !!apiKey)
+    console.log('API Key preview:', apiKey ? `${apiKey.substring(0, 10)}...` : 'undefined')
+    console.log('Has valid API key:', hasValidApiKey)
+    console.log('Maps available:', !!hasValidApiKey)
+    
     setIsGoogleMapsAvailable(!!hasValidApiKey)
   })
 
@@ -68,6 +76,13 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
                 あなたのスコア: <span className="font-bold text-blue-600">{userScore}点</span>
+              </div>
+              <div className={`text-xs px-2 py-1 rounded ${
+                isGoogleMapsAvailable 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-yellow-100 text-yellow-800'
+              }`}>
+                {isGoogleMapsAvailable ? '🗺️ Google Maps' : '📍 サンプルモード'}
               </div>
             </div>
           </div>
