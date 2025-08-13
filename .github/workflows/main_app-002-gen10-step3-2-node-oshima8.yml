@@ -26,14 +26,42 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build --if-present
+          npm run build
           npm run test --if-present
+
+      - name: Create deployment package
+        run: |
+          # Create a clean package for deployment
+          mkdir -p deploy-package
+          
+          # Copy essential files with fresh .next folder
+          cp -r .next deploy-package/
+          cp -r public deploy-package/ 2>/dev/null || (echo "Creating empty public directory" && mkdir -p deploy-package/public)
+          cp package.json deploy-package/
+          cp server.js deploy-package/
+          cp next.config.js deploy-package/
+          
+          # Copy source files (required for Next.js)
+          cp -r types deploy-package/ 2>/dev/null || echo "No types directory"
+          cp -r components deploy-package/ 2>/dev/null || echo "No components directory"
+          cp -r app deploy-package/ 2>/dev/null || echo "No app directory"
+          
+          # Copy config files
+          cp tailwind.config.js deploy-package/ 2>/dev/null || echo "No tailwind config"
+          cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
+          cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
+          
+          # List what we're deploying
+          echo "📦 Deployment package contents:"
+          ls -la deploy-package/
+          echo "📦 Fresh .next folder:"
+          ls -la deploy-package/.next/ | head -5
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: deploy-package/
 
   deploy:
     runs-on: ubuntu-latest
