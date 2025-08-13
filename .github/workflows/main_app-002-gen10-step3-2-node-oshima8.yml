@@ -45,6 +45,7 @@ jobs:
           cp -r public deploy-package/ 2>/dev/null || (echo "No public directory, creating empty one" && mkdir -p deploy-package/public)
           cp package.json deploy-package/
           cp next.config.js deploy-package/
+          cp server.js deploy-package/
           
           # Copy node_modules (essential for Azure deployment)
           cp -r node_modules deploy-package/ 2>/dev/null || echo "No node_modules directory"
