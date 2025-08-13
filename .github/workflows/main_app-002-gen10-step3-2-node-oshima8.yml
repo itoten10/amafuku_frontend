@@ -26,8 +26,13 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
+          # 古い.nextフォルダを強制削除してフレッシュビルド
+          rm -rf .next
           npm run build
           npm run test --if-present
+          # ビルド結果を確認
+          echo "📦 Fresh build completed:"
+          ls -la .next/ | head -5
 
       - name: Create deployment package
         run: |
