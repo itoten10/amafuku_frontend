@@ -15,12 +15,35 @@ console.log('🚀 Starting Famoly Drive Next.js server...');
 console.log(`📦 Current directory: ${process.cwd()}`);
 console.log(`🔌 Port: ${port}`);
 
-// nextコマンドの実行パスを明示的に指定
-const nextBin = path.join(__dirname, 'node_modules', '.bin', 'next');
-const nextFallback = path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
+// nextコマンドの実行パスを明示的に指定（Azureのシンボリックリンク対応）
+const possiblePaths = [
+  path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next'),
+  path.join('/node_modules', 'next', 'dist', 'bin', 'next'),
+  path.join(__dirname, '_del_node_modules', 'next', 'dist', 'bin', 'next')
+];
+
+// 存在するパスを見つける
+let nextPath = null;
+for (const p of possiblePaths) {
+  try {
+    if (require('fs').existsSync(p)) {
+      nextPath = p;
+      console.log(`✅ Found Next.js at: ${p}`);
+      break;
+    }
+  } catch (e) {
+    // Continue to next path
+  }
+}
+
+if (!nextPath) {
+  console.error('❌ Could not find Next.js binary!');
+  console.error('Searched paths:', possiblePaths);
+  process.exit(1);
+}
 
 // nextコマンドを実行
-const nextProcess = spawn('node', [nextFallback, 'start', '-p', port], {
+const nextProcess = spawn('node', [nextPath, 'start', '-p', port], {
   stdio: 'inherit',
   env: { ...process.env, PORT: port }
 });
