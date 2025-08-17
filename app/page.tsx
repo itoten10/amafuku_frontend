@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import { EnhancedGoogleMapRoute } from '@/components/EnhancedGoogleMapRoute'
 import { EnhancedSampleMapRoute } from '@/components/EnhancedSampleMapRoute'
 import { WorkingQuizPanel } from '@/components/WorkingQuizPanel'
 import { AIQuizPanel } from '@/components/AIQuizPanel'
-import { TrendingUp, Sparkles, GraduationCap } from 'lucide-react'
+import { TrendingUp, Sparkles, GraduationCap, User, LogOut } from 'lucide-react'
 
 interface RouteInfo {
   origin: string
@@ -25,12 +26,20 @@ interface HistoricalSpot {
 }
 
 export default function Home() {
+  const { data: session, status } = useSession()
   const [currentRoute, setCurrentRoute] = useState<RouteInfo | null>(null)
   const [historicalSpots, setHistoricalSpots] = useState<HistoricalSpot[]>([])
   const [selectedSpot, setSelectedSpot] = useState<HistoricalSpot | null>(null)
   const [userScore, setUserScore] = useState(0)
   const [isGoogleMapsAvailable, setIsGoogleMapsAvailable] = useState(false)
   const [quizMode, setQuizMode] = useState<'basic' | 'ai'>('basic')
+
+  // 認証状態をチェック - middlewareでリダイレクトされるはずだが、念のためクライアントサイドでもチェック
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      window.location.href = '/auth/signin'
+    }
+  }, [status])
 
   // Google Maps APIの可用性をチェック
   useEffect(() => {
@@ -47,6 +56,30 @@ export default function Home() {
     
     setIsGoogleMapsAvailable(!!hasValidApiKey)
   }, [])
+
+  // ローディング中または未認証の場合はローディング画面を表示
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // 未認証の場合（middlewareでリダイレクトされるまでの短時間）
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">認証を確認しています...</p>
+        </div>
+      </div>
+    )
+  }
 
   const handleRouteFound = (routeInfo: RouteInfo) => {
     setCurrentRoute(routeInfo)
@@ -83,6 +116,21 @@ export default function Home() {
                   : 'bg-yellow-100 text-yellow-800'
               }`}>
                 {isGoogleMapsAvailable ? '🗺️ Google Maps' : '📍 サンプルモード'}
+              </div>
+              
+              {/* 認証済みユーザー情報 */}
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <User className="h-4 w-4 text-gray-600" />
+                  <span className="text-sm text-gray-700">{session.user?.name || 'ユーザー'}</span>
+                </div>
+                <button
+                  onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+                  className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>ログアウト</span>
+                </button>
               </div>
             </div>
           </div>
