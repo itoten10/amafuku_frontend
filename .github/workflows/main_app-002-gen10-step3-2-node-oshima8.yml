@@ -31,8 +31,12 @@ jobs:
           rm -rf .next
           rm -rf package-lock.json
           
-          # 新しいインストール
-          npm install
+          # 新しいインストール (Azure tar.gz作成を無効化)
+          npm install --no-optional
+          
+          # CRITICAL: Azure tar.gz作成を防ぐため package-lock.json削除
+          echo "🚫 Removing package-lock.json to prevent Azure tar.gz creation"
+          rm -f package-lock.json
           
           # フレッシュビルドでソースファイル確認
           echo "🔍 Source files before build:"
