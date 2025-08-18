@@ -86,6 +86,14 @@ jobs:
           cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
           cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
           
+          # CRITICAL: Copy node_modules (Azure symlink may fail)
+          echo "📦 Copying node_modules..."
+          cp -r node_modules deploy-package/ || echo "Failed to copy node_modules"
+          
+          # Verify Next.js is available
+          echo "🔍 Next.js module verification:"
+          ls -la deploy-package/node_modules/next/ | head -5 || echo "❌ NO NEXT.JS MODULE"
+          
           # Copy environment files
           cp .env.production deploy-package/ 2>/dev/null || echo "No .env.production"
           cp auth.ts deploy-package/ 2>/dev/null || echo "No auth.ts"
