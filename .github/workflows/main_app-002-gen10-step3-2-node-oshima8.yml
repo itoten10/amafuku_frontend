@@ -78,6 +78,8 @@ jobs:
           cp -r public deploy-package/ 2>/dev/null || (echo "Creating empty public directory" && mkdir -p deploy-package/public)
           cp package.json deploy-package/
           cp server.js deploy-package/
+          cp startup.sh deploy-package/
+          chmod +x deploy-package/startup.sh
           cp next.config.js deploy-package/
           
           # Copy source files (required for Next.js App Router)
