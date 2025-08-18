@@ -36,20 +36,38 @@ jobs:
 
       - name: Copy artifact for deployment job
         run: |
-          mkdir -p deploy/node_modules
-          # コアファイル
+          mkdir -p deploy
+          # Standaloneビルドをそのままコピー（これが完全なNext.jsアプリ）
           cp -r ./.next/standalone/. ./deploy/
-          cp -r ./.next/static ./deploy/.next/static
-          cp -r ./public ./deploy/public || echo "No public directory"
-          cp server.js ./deploy/
-          cp package.json ./deploy/
-          # Prisma関連
-          cp -r prisma ./deploy/ || echo "No prisma directory" 
-          mkdir -p ./deploy/node_modules/.prisma
-          cp -r node_modules/.prisma ./deploy/node_modules/ || echo "No .prisma directory"
-          cp -r node_modules/@prisma ./deploy/node_modules/ || echo "No @prisma directory"
-          # 実行権限設定
-          chmod +x ./deploy/server.js || true
+          # staticファイルを正しい場所にコピー
+          mkdir -p deploy/.next
+          cp -r ./.next/static deploy/.next/static
+          # publicディレクトリをコピー
+          cp -r ./public deploy/public || echo "No public directory"
+          # package.jsonをコピー（standaloneにはない場合）
+          cp package.json deploy/ || echo "No package.json"
+          # Prismaファイルをコピー
+          cp -r prisma deploy/ || echo "No prisma directory"
+          # 必要なnode_modulesをコピー
+          mkdir -p deploy/node_modules
+          cp -r node_modules/.prisma deploy/node_modules/ || echo "No .prisma directory"  
+          cp -r node_modules/@prisma deploy/node_modules/ || echo "No @prisma directory"
+          # standaloneのserver.jsをメインとして使用
+          mv deploy/server.js deploy/server.js.standalone || echo "No standalone server.js"
+          cp server.js deploy/server.js.custom || echo "No custom server.js"
+          # standaloneのserver.jsを使用（ポート設定を調整）
+          if [ -f "deploy/server.js.standalone" ]; then
+            sed 's/process.env.PORT || 3000/process.env.PORT || 8080/g' deploy/server.js.standalone > deploy/server.js
+            echo "✅ Using standalone server with port 8080"
+          else
+            cp server.js deploy/server.js
+            echo "⚠️ Using custom server"
+          fi
+          # デバッグ情報
+          echo "🔍 Deploy directory:"
+          ls -la deploy/
+          echo "🔍 Next.js build files:"
+          ls -la deploy/.next/ || echo "No .next directory"
 
       - name: Zip artifact for deployment
         run: zip release.zip ./deploy -r
