@@ -1,47 +1,34 @@
 #!/bin/bash
+set -e  # Exit on any error
 
-echo "🚀 Starting Next.js application..."
+echo "🚀 STARTUP.SH EXECUTING - Debug mode enabled"
+echo "📅 Current time: $(date)"
+echo "📁 PWD: $(pwd)"
+echo "📝 User: $(whoami)"
 
-# Force clean install with detailed logging
-echo "🔍 Current directory: $(pwd)"
-echo "🔍 Files present: $(ls -la | head -10)"
-
-if [ ! -d "node_modules" ] || [ ! -f "node_modules/.bin/next" ]; then
-    echo "⚡ Force installing ALL dependencies..."
-    rm -rf node_modules package-lock.json
-    npm cache clean --force
+# Ultra-fast minimal approach
+echo "⚡ FAST NODE_MODULES CHECK..."
+if [ ! -f "node_modules/.bin/next" ]; then
+    echo "🔧 Installing ONLY essential packages..."
+    npm install next@15.1.0 react@18.2.0 react-dom@18.2.0 --no-package-lock --no-optional --prefer-offline
     
-    # Install with full logging
-    npm install --verbose --no-optional
-    
-    # Validate critical modules
-    echo "🔍 Checking Next.js installation..."
+    # Verify Next.js
     if [ ! -f "node_modules/.bin/next" ]; then
-        echo "❌ Next.js binary not found! Installing manually..."
-        npm install next@15.1.0 --save
-    fi
-    
-    echo "✅ Dependencies installed"
-    ls -la node_modules/.bin/ | grep next || echo "❌ Next.js still missing!"
-fi
-
-# Build with error handling
-if [ ! -d ".next" ]; then
-    echo "⚠️ Building Next.js..."
-    
-    # Try using npx first
-    if ./node_modules/.bin/next build; then
-        echo "✅ Build successful"
-    else
-        echo "❌ Build failed, trying alternative..."
-        npx next build || npm run build
+        echo "❌ CRITICAL: Next.js installation failed!"
+        exit 1
     fi
 fi
 
-# Final validation before server start
-echo "🔍 Final validation..."
-ls -la .next/ | head -5
-ls -la node_modules/.bin/next* || echo "❌ Next.js binary missing"
+# Skip build if .next exists and is recent
+if [ ! -d ".next" ] || [ ! -f ".next/BUILD_ID" ]; then
+    echo "🏗️ Quick build..."
+    ./node_modules/.bin/next build --no-lint
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ Build failed! Exiting..."
+        exit 1
+    fi
+fi
 
-echo "✅ Starting server..."
-node server.js
+echo "✅ Starting server immediately..."
+exec node server.js
