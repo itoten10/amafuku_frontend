@@ -55,28 +55,42 @@ jobs:
           # Create a clean package for deployment
           mkdir -p deploy-package
           
-          # Copy essential files with fresh .next folder
+          # Copy essential files - CRITICAL: .next folder FIRST
+          echo "📦 Copying .next build folder..."
           cp -r .next deploy-package/
+          
+          # Verify API routes were copied
+          echo "🔍 Verifying API routes in deployment package:"
+          ls -la deploy-package/.next/server/app/api/ || echo "❌ NO API DIRECTORY"
+          ls -la deploy-package/.next/server/app/api/auth/ || echo "❌ NO AUTH API"
+          ls -la deploy-package/.next/server/app/api/health/ || echo "❌ NO HEALTH API"
+          
+          # Copy other essential files
           cp -r public deploy-package/ 2>/dev/null || (echo "Creating empty public directory" && mkdir -p deploy-package/public)
           cp package.json deploy-package/
           cp server.js deploy-package/
           cp next.config.js deploy-package/
           
-          # Copy source files (required for Next.js)
-          cp -r types deploy-package/ 2>/dev/null || echo "No types directory"
+          # Copy source files (required for Next.js App Router)
+          cp -r app deploy-package/
           cp -r components deploy-package/ 2>/dev/null || echo "No components directory"
-          cp -r app deploy-package/ 2>/dev/null || echo "No app directory"
+          cp -r types deploy-package/ 2>/dev/null || echo "No types directory"
           
           # Copy config files
           cp tailwind.config.js deploy-package/ 2>/dev/null || echo "No tailwind config"
           cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
           cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
           
+          # Copy environment files
+          cp .env.production deploy-package/ 2>/dev/null || echo "No .env.production"
+          cp auth.ts deploy-package/ 2>/dev/null || echo "No auth.ts"
+          cp middleware.ts deploy-package/ 2>/dev/null || echo "No middleware.ts"
+          
           # List what we're deploying
-          echo "📦 Deployment package contents:"
+          echo "📦 FINAL Deployment package contents:"
           ls -la deploy-package/
-          echo "📦 Fresh .next folder:"
-          ls -la deploy-package/.next/ | head -5
+          echo "📦 FINAL API routes verification:"
+          find deploy-package -name "route.js" -path "*/api/*" || echo "❌ NO ROUTE.JS FILES FOUND"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

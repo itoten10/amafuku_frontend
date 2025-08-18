@@ -8,10 +8,8 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  // 実験的機能を有効化（NextAuth 5との互換性向上）
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
+  // Prisma クライアントを外部パッケージとして設定
+  serverExternalPackages: ['@prisma/client'],
   // APIルートの設定を明示的に指定
   async rewrites() {
     return [
