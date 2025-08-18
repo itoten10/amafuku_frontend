@@ -17,7 +17,7 @@ const handle = app.getRequestHandler();
 // ポート設定 - Azure App Service用に8080をデフォルトに
 const port = process.env.PORT || 8080;
 
-console.log('🚀 Starting Famoly Drive Next.js server...');
+console.log('🚀 Starting Driving Study Next.js server...');
 console.log(`📦 Current directory: ${process.cwd()}`);
 console.log(`🔌 Port: ${port}`);
 console.log(`🌍 Environment: ${process.env.NODE_ENV}`);

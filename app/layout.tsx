@@ -7,8 +7,8 @@ import { Providers } from '@/components/Providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Famoly Drive - 移動時間を学習時間に',
-  description: '家族でドライブしながら楽しく学習できるアプリ',
+  title: 'Driving Study（ドラスタ） - 移動時間を学習時間に',
+  description: 'ドライブしながら楽しく学習できるアプリ',
 }
 
 export default function RootLayout({

@@ -33,24 +33,22 @@ export default function Home() {
   const [userScore, setUserScore] = useState(0)
   const [isGoogleMapsAvailable, setIsGoogleMapsAvailable] = useState(false)
   const [quizMode, setQuizMode] = useState<'basic' | 'ai'>('basic')
+  const [isShared, setIsShared] = useState(false)
 
   // 認証状態をチェック - オプショナルログイン対応
   // ログインなしでもアプリを利用可能にする
 
-  // Google Maps APIの可用性をチェック
+  // Google Maps APIを常に有効にする（サンプルモード無効化）
   useEffect(() => {
-    // 環境変数でAPIキーが設定されているかチェック
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-    const hasValidApiKey = apiKey && apiKey !== 'your-google-maps-api-key-here'
     
     // デバッグ情報をコンソールに出力
     console.log('🗺️ Google Maps API Debug:')
     console.log('API Key exists:', !!apiKey)
     console.log('API Key preview:', apiKey ? `${apiKey.substring(0, 10)}...` : 'undefined')
-    console.log('Has valid API key:', hasValidApiKey)
-    console.log('Maps available:', !!hasValidApiKey)
     
-    setIsGoogleMapsAvailable(!!hasValidApiKey)
+    // Google Maps APIを常に利用可能とする
+    setIsGoogleMapsAvailable(true)
   }, [])
 
   // ローディング中の場合はローディング画面を表示
@@ -80,6 +78,12 @@ export default function Home() {
     setUserScore(prev => prev + points)
   }
 
+  const handleShareToNavigation = () => {
+    // デモ用のナビ共有機能
+    setIsShared(true)
+    setTimeout(() => setIsShared(false), 3000) // 3秒後にリセット
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ヘッダー */}
@@ -89,19 +93,15 @@ export default function Home() {
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-blue-600 rounded"></div>
               <h1 className="text-xl font-bold text-gray-900">
-                Famoly Drive
+                Driving Study
               </h1>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
                 あなたのスコア: <span className="font-bold text-blue-600">{userScore}点</span>
               </div>
-              <div className={`text-xs px-2 py-1 rounded ${
-                isGoogleMapsAvailable 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-yellow-100 text-yellow-800'
-              }`}>
-                {isGoogleMapsAvailable ? '🗺️ Google Maps' : '📍 サンプルモード'}
+              <div className="text-xs px-2 py-1 rounded bg-green-100 text-green-800">
+                🗺️ Google Maps
               </div>
               
               {/* 認証済みユーザー情報 - セッション状態で条件分岐 */}
@@ -145,23 +145,24 @@ export default function Home() {
           {/* 左側: ルート検索と地図 */}
           <div className="lg:col-span-2">
 
-            {/* マップコンポーネント（教育強化版のみ） */}
-            {isGoogleMapsAvailable ? (
-              <EnhancedGoogleMapRoute 
-                onRouteFound={handleRouteFound}
-                onSpotsFound={handleSpotsFound}
-              />
-            ) : (
-              <EnhancedSampleMapRoute 
-                onRouteFound={handleRouteFound}
-                onSpotsFound={handleSpotsFound}
-              />
-            )}
+            {/* マップコンポーネント */}
+            <EnhancedGoogleMapRoute 
+              onRouteFound={handleRouteFound}
+              onSpotsFound={handleSpotsFound}
+            />
             
             {/* ルート情報表示 */}
             {currentRoute && (
               <div className="mt-4 bg-white rounded-lg shadow-md p-4">
-                <h3 className="font-semibold mb-2">ルート情報</h3>
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-semibold">ルート情報</h3>
+                  <button
+                    onClick={handleShareToNavigation}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    📱 ナビに共有
+                  </button>
+                </div>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-600">出発:</span> {currentRoute.origin}
@@ -176,6 +177,16 @@ export default function Home() {
                     <span className="text-gray-600">時間:</span> {currentRoute.duration}
                   </div>
                 </div>
+                
+                {/* 共有完了メッセージ */}
+                {isShared && (
+                  <div className="mt-3 p-3 bg-green-100 border border-green-300 rounded-lg">
+                    <div className="flex items-center text-green-800 text-sm">
+                      <span className="mr-2">✅</span>
+                      ナビアプリに共有しました！（デモ）
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

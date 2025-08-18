@@ -51,7 +51,7 @@ export default function SignIn() {
           <div className="h-12 w-12 bg-blue-600 rounded"></div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Famoly Drive にログイン
+          Driving Study にログイン
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           または{' '}
@@ -152,6 +152,27 @@ export default function SignIn() {
               </button>
             </div>
           </form>
+
+          {/* ログインしないで使うボタン */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">または</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <Link
+                href="/"
+                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                ログインしないで使う
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

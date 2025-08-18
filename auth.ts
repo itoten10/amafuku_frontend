@@ -34,9 +34,11 @@ export const {
         params: {
           prompt: "consent",
           access_type: "offline",
-          response_type: "code"
+          response_type: "code",
+          scope: "openid email profile"
         }
-      }
+      },
+      allowDangerousEmailAccountLinking: true,
     }),
     Credentials({
       name: "credentials",
@@ -88,6 +90,7 @@ export const {
     signIn: '/auth/signin',
     error: '/auth/error',
   },
+  trustHost: true,
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
