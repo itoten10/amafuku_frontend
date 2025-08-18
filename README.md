@@ -97,4 +97,4 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 ---
 
 ## 🔄 バックアップ情報
-以前の顧客管理フロントエンドは `backup-customer-frontend` ブランチに保存されています。
+以前の顧客管理フロントエンドは `backup-customer-frontend` ブランチに保存されています。# Test Azure tar.gz disable - 2025年 8月19日 火曜日 01時32分54秒 JST
