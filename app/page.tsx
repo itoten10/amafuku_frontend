@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { EnhancedGoogleMapRoute } from '@/components/EnhancedGoogleMapRoute'
-import { EnhancedSampleMapRoute } from '@/components/EnhancedSampleMapRoute'
 import { WorkingQuizPanel } from '@/components/WorkingQuizPanel'
 import { AIQuizPanel } from '@/components/AIQuizPanel'
 import { TrendingUp, Sparkles, GraduationCap, User, LogOut } from 'lucide-react'
@@ -31,24 +30,19 @@ export default function Home() {
   const [historicalSpots, setHistoricalSpots] = useState<HistoricalSpot[]>([])
   const [selectedSpot, setSelectedSpot] = useState<HistoricalSpot | null>(null)
   const [userScore, setUserScore] = useState(0)
-  const [isGoogleMapsAvailable, setIsGoogleMapsAvailable] = useState(false)
   const [quizMode, setQuizMode] = useState<'basic' | 'ai'>('basic')
   const [isShared, setIsShared] = useState(false)
 
   // 認証状態をチェック - オプショナルログイン対応
   // ログインなしでもアプリを利用可能にする
 
-  // Google Maps APIを常に有効にする（サンプルモード無効化）
+  // Google Maps APIデバッグ情報を出力
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     
-    // デバッグ情報をコンソールに出力
     console.log('🗺️ Google Maps API Debug:')
     console.log('API Key exists:', !!apiKey)
     console.log('API Key preview:', apiKey ? `${apiKey.substring(0, 10)}...` : 'undefined')
-    
-    // Google Maps APIを常に利用可能とする
-    setIsGoogleMapsAvailable(true)
   }, [])
 
   // ローディング中の場合はローディング画面を表示

@@ -40,7 +40,9 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
   const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null)
   const markersRef = useRef<google.maps.Marker[]>([])
 
-  const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  // Azure環境変数から取得、フォールバックも含める
+  const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 
+    (typeof window !== 'undefined' ? (window as any).__GOOGLE_MAPS_API_KEY : null)
 
   // 教育的価値の高いキーワードリスト（日本史・地理に特化）
   const EDUCATIONAL_KEYWORDS = {
@@ -504,11 +506,22 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
   }
 
   if (!GOOGLE_MAPS_API_KEY) {
+    // デバッグ情報を詳しく表示
+    console.error('🚨 Google Maps API Key not found!')
+    console.log('環境変数確認:', {
+      'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY': process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+      'NODE_ENV': process.env.NODE_ENV,
+      'All env vars starting with NEXT_PUBLIC': Object.keys(process.env).filter(key => key.startsWith('NEXT_PUBLIC'))
+    })
+    
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="text-center text-red-600">
           <p>Google Maps API キーが設定されていません</p>
-          <p className="text-sm">.env.local ファイルを確認してください</p>
+          <p className="text-sm">Azure環境変数 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY を確認してください</p>
+          <p className="text-xs mt-2 text-gray-500">
+            デバッグ: NODE_ENV = {process.env.NODE_ENV}
+          </p>
         </div>
       </div>
     )
