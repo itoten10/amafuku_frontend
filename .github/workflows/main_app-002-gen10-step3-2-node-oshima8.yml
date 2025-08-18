@@ -81,6 +81,7 @@ jobs:
           cp startup.sh deploy-package/
           chmod +x deploy-package/startup.sh
           cp next.config.js deploy-package/
+          cp web.config deploy-package/
           
           # Copy source files (required for Next.js App Router)
           cp -r app deploy-package/
