@@ -10,30 +10,24 @@ if [ -f "node_modules.tar.gz" ]; then
     rm -f node_modules.tar.gz
 fi
 
-# Ensure we have package.json
-if [ ! -f "package.json" ]; then
-    echo "❌ package.json not found!"
-    exit 1
+# Check if node_modules already exists (from previous deployment)
+if [ -d "node_modules" ] && [ -d "node_modules/next" ]; then
+    echo "✅ Dependencies already installed from previous deployment"
+    
+    # Quick verify of critical dependencies
+    if [ ! -f "node_modules/.bin/next" ]; then
+        echo "⚠️ Next.js binary missing, reinstalling..."
+        npm install next
+    fi
+else
+    echo "📦 Installing dependencies (first time)..."
+    # Use minimal install for production
+    npm install --production --no-optional --no-audit --no-fund --ignore-scripts
 fi
 
-# Clean install dependencies (remove old node_modules first)
-echo "🧹 Cleaning old dependencies..."
-rm -rf node_modules
-
-echo "📦 Installing fresh dependencies..."
-npm install --production
-
-# Verify Next.js is installed
-if [ ! -f "node_modules/.bin/next" ]; then
-    echo "❌ Next.js not installed! Trying full install..."
-    npm install
-fi
-
-# Check if .next build exists after npm install
+# Check if .next build exists
 if [ ! -d ".next" ]; then
     echo "⚠️ .next build directory not found! Building now..."
-    echo "📂 Current contents:"
-    ls -la
     
     # Build the application
     echo "🔨 Running Next.js build..."
@@ -49,14 +43,6 @@ if [ ! -d ".next" ]; then
     exit 1
 fi
 
-if [ ! -d "node_modules/next" ]; then
-    echo "❌ Next.js not installed!"
-    exit 1
-fi
-
-echo "✅ All dependencies ready"
-echo "📂 Final directory structure:"
-ls -la
-
+echo "✅ All ready"
 echo "🚀 Starting Next.js server..."
 exec npm start
