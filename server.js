@@ -14,8 +14,8 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-// ポート設定
-const port = process.env.PORT || 3000;
+// ポート設定 - Azure App Service用に8080をデフォルトに
+const port = process.env.PORT || 8080;
 
 console.log('🚀 Starting Famoly Drive Next.js server...');
 console.log(`📦 Current directory: ${process.cwd()}`);

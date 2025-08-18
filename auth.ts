@@ -14,6 +14,7 @@ export const {
   handlers,
 } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET || "your-nextauth-secret-here",
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
@@ -88,10 +89,29 @@ export const {
       return session
     },
     async signIn({ user, account, profile }) {
+      console.log('🔐 SignIn attempt:', { 
+        provider: account?.provider, 
+        userId: user?.id,
+        email: user?.email 
+      })
+      
       if (account?.provider === "google") {
+        console.log('✅ Google sign-in successful')
         return true
       }
+      
       return true
+    },
+    async redirect({ url, baseUrl }) {
+      console.log('🔄 Redirect:', { url, baseUrl })
+      
+      // 同じドメインかチェック
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      
+      // ベースURLと同じドメインかチェック
+      if (new URL(url).origin === baseUrl) return url
+      
+      return baseUrl
     }
   },
   debug: process.env.NODE_ENV === 'development'

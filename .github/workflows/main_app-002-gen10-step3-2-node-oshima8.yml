@@ -25,9 +25,12 @@ jobs:
 
       - name: npm install, build, and test
         env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}    
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          DATABASE_URL: "file:./dev.db"
         run: |
           npm install
+          npx prisma generate
+          npx prisma db push --accept-data-loss
           npm run build --if-present
           npm run test --if-present
 
@@ -36,6 +39,12 @@ jobs:
           mkdir deploy
           cp -r ./.next/standalone/. ./deploy
           cp -r ./.next/static/. ./deploy/.next/static
+          cp -r ./public/. ./deploy/public
+          cp server.js ./deploy/
+          cp package.json ./deploy/
+          cp -r prisma ./deploy/
+          cp -r node_modules/.prisma ./deploy/node_modules/.prisma || true
+          cp -r node_modules/@prisma ./deploy/node_modules/@prisma || true
 
       - name: Zip artifact for deployment
         run: zip release.zip ./deploy -r

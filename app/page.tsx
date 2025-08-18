@@ -34,12 +34,8 @@ export default function Home() {
   const [isGoogleMapsAvailable, setIsGoogleMapsAvailable] = useState(false)
   const [quizMode, setQuizMode] = useState<'basic' | 'ai'>('basic')
 
-  // 認証状態をチェック - middlewareでリダイレクトされるはずだが、念のためクライアントサイドでもチェック
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      window.location.href = '/auth/signin'
-    }
-  }, [status])
+  // 認証状態をチェック - オプショナルログイン対応
+  // ログインなしでもアプリを利用可能にする
 
   // Google Maps APIの可用性をチェック
   useEffect(() => {
@@ -57,7 +53,7 @@ export default function Home() {
     setIsGoogleMapsAvailable(!!hasValidApiKey)
   }, [])
 
-  // ローディング中または未認証の場合はローディング画面を表示
+  // ローディング中の場合はローディング画面を表示
   if (status === 'loading') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -69,17 +65,7 @@ export default function Home() {
     )
   }
 
-  // 未認証の場合（middlewareでリダイレクトされるまでの短時間）
-  if (!session) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">認証を確認しています...</p>
-        </div>
-      </div>
-    )
-  }
+  // ログインなしでもアプリを利用可能にするため、未認証でもメイン画面を表示
 
   const handleRouteFound = (routeInfo: RouteInfo) => {
     setCurrentRoute(routeInfo)
