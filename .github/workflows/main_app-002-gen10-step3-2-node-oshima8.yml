@@ -24,118 +24,27 @@ jobs:
           node-version: '22.x'
 
       - name: npm install, build, and test
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}    
         run: |
-          # 強制的に全キャッシュクリア
-          npm cache clean --force
-          rm -rf node_modules
-          rm -rf .next
-          rm -rf package-lock.json
-          
-          # 新しいインストール (Azure tar.gz作成を無効化)
-          npm install --no-optional
-          
-          # CRITICAL: Azure tar.gz作成を防ぐため package-lock.json削除
-          echo "🚫 Removing package-lock.json to prevent Azure tar.gz creation"
-          rm -f package-lock.json
-          
-          # フレッシュビルドでソースファイル確認
-          echo "🔍 Source files before build:"
-          ls -la app/api/auth/
-          ls -la app/auth/
-          
-          npm run build
+          npm install
+          npm run build --if-present
           npm run test --if-present
-          
-          # ビルド結果の詳細確認
-          echo "📦 Fresh build completed:"
-          ls -la .next/ | head -10
-          echo "🔍 Built API routes:"
-          find .next -name "*auth*" -type f || echo "No auth files found"
-          echo "🔍 Built server routes:"
-          ls -la .next/server/app/api/ || echo "No API directory found"
 
-      - name: Create deployment package  
+      - name: Copy artifact for deployment job
         run: |
-          # Create a clean package for deployment
-          rm -rf deploy-package
-          mkdir -p deploy-package
-          
-          # CRITICAL: Copy .next folder with force overwrite
-          echo "📦 Force copying .next build folder..."
-          cp -rf .next deploy-package/
-          
-          # Verify .next was copied completely
-          echo "🔍 Deployment package .next verification:"
-          ls -la deploy-package/.next/ | head -10
-          
-          # Verify API routes were copied
-          echo "🔍 Verifying API routes in deployment package:"
-          ls -la deploy-package/.next/server/app/api/ || echo "❌ NO API DIRECTORY"
-          ls -la deploy-package/.next/server/app/api/auth/ || echo "❌ NO AUTH API"
-          ls -la deploy-package/.next/server/app/api/health/ || echo "❌ NO HEALTH API"
-          
-          # Copy other essential files
-          cp -r public deploy-package/ 2>/dev/null || (echo "Creating empty public directory" && mkdir -p deploy-package/public)
-          cp package.json deploy-package/
-          cp server.js deploy-package/
-          cp startup.sh deploy-package/
-          chmod +x deploy-package/startup.sh
-          cp next.config.js deploy-package/
-          cp web.config deploy-package/
-          
-          # Copy source files (required for Next.js App Router)
-          cp -r app deploy-package/
-          cp -r components deploy-package/ 2>/dev/null || echo "No components directory"
-          cp -r types deploy-package/ 2>/dev/null || echo "No types directory"
-          
-          # Copy config files
-          cp tailwind.config.js deploy-package/ 2>/dev/null || echo "No tailwind config"
-          cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
-          cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
-          
-          # CRITICAL: Create .deployment file at ROOT to disable Oryx
-          echo "🚫 Creating .deployment at project root to disable Oryx build..."
-          echo "[config]" > .deployment
-          echo "SCM_DO_BUILD_DURING_DEPLOYMENT=false" >> .deployment
-          echo "WEBSITE_DISABLE_NODE_MODULES_COMPRESSION=true" >> .deployment
-          
-          # Copy to deploy package too
-          cp .deployment deploy-package/
-          
-          # Copy node_modules for instant startup
-          echo "📦 Force copying node_modules..."
-          cp -r node_modules deploy-package/
-          
-          # Verify essential modules exist
-          echo "🔍 Verifying Next.js binary..."
-          if [ ! -f "deploy-package/node_modules/.bin/next" ]; then
-              echo "❌ CRITICAL: Next.js missing from node_modules!"
-              exit 1
-          fi
-          
-          # VERIFY .next exists and will be preserved
-          echo "🔍 FINAL .next verification:"
-          ls -la deploy-package/.next/ | head -5 || echo "❌ .next MISSING!"
-          ls -la deploy-package/.next/server/app/api/ || echo "❌ API ROUTES MISSING!"
-          
-          echo "✅ Azure will install node_modules from package.json without tar.gz"
-          
-          # Copy environment files
-          cp .env.production deploy-package/ 2>/dev/null || echo "No .env.production"
-          cp auth.ts deploy-package/ 2>/dev/null || echo "No auth.ts"
-          cp middleware.ts deploy-package/ 2>/dev/null || echo "No middleware.ts"
-          
-          # List what we're deploying
-          echo "📦 FINAL Deployment package contents:"
-          ls -la deploy-package/
-          echo "📦 FINAL API routes verification:"
-          find deploy-package -name "route.js" -path "*/api/*" || echo "❌ NO ROUTE.JS FILES FOUND"
+          mkdir deploy
+          cp -r ./.next/standalone/. ./deploy
+          cp -r ./.next/static/. ./deploy/.next/static
+
+      - name: Zip artifact for deployment
+        run: zip release.zip ./deploy -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: deploy-package/
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -146,12 +55,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-      
+          
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'app-002-gen10-step3-2-node-oshima8'
           slot-name: 'Production'
-          package: .
+          package: ./deploy
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4639FE8C51144D70B8C3A9508C544971 }}
