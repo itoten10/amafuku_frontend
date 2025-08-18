@@ -40,9 +40,37 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
   const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null)
   const markersRef = useRef<google.maps.Marker[]>([])
 
-  // Azure環境変数から取得、フォールバックも含める
-  const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 
-    (typeof window !== 'undefined' ? (window as any).__GOOGLE_MAPS_API_KEY : null)
+  // Azure環境変数から取得（Next.js本番環境対応）
+  const [GOOGLE_MAPS_API_KEY, setGoogleMapsApiKey] = useState<string | null>(null)
+  
+  // 本番環境でのAPIキー取得
+  useEffect(() => {
+    // サーバーサイドで環境変数を取得してクライアントに渡す
+    const getApiKey = async () => {
+      try {
+        const response = await fetch('/api/config')
+        if (response.ok) {
+          const config = await response.json()
+          setGoogleMapsApiKey(config.googleMapsApiKey)
+        } else {
+          // フォールバック: windowオブジェクトから取得
+          const windowApiKey = (window as any).__GOOGLE_MAPS_API_KEY
+          if (windowApiKey) {
+            setGoogleMapsApiKey(windowApiKey)
+          }
+        }
+      } catch (error) {
+        console.error('API key fetch failed:', error)
+        // 最終フォールバック
+        const windowApiKey = (window as any).__GOOGLE_MAPS_API_KEY
+        if (windowApiKey) {
+          setGoogleMapsApiKey(windowApiKey)
+        }
+      }
+    }
+    
+    getApiKey()
+  }, [])
 
   // 教育的価値の高いキーワードリスト（日本史・地理に特化）
   const EDUCATIONAL_KEYWORDS = {
@@ -86,9 +114,11 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
 
   useEffect(() => {
     if (!GOOGLE_MAPS_API_KEY) {
-      console.error('Google Maps API key not found')
+      console.log('⏳ Waiting for Google Maps API key...')
       return
     }
+
+    console.log('🗺️ Initializing Google Maps with API key:', `${GOOGLE_MAPS_API_KEY.substring(0, 10)}...`)
 
     const loader = new Loader({
       apiKey: GOOGLE_MAPS_API_KEY,
@@ -96,8 +126,6 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
       libraries: ['places', 'geometry'],
       language: 'ja'
     })
-
-    console.log('🗺️ Google Maps Loader created with API key:', `${GOOGLE_MAPS_API_KEY.substring(0, 10)}...`)
 
     loader.load().then(() => {
       console.log('✅ Google Maps API loaded successfully')
@@ -119,7 +147,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
 
       directionsRendererRef.current.setMap(map)
     }).catch((error) => {
-      console.error('Google Maps API loading error:', error)
+      console.error('❌ Google Maps API loading error:', error)
       toast.error('Google Maps の読み込みに失敗しました')
     })
   }, [GOOGLE_MAPS_API_KEY])
@@ -505,22 +533,29 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
     markersRef.current.push(marker)
   }
 
+  if (GOOGLE_MAPS_API_KEY === null) {
+    // APIキー読み込み中
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Google Maps を初期化しています...</p>
+        </div>
+      </div>
+    )
+  }
+
   if (!GOOGLE_MAPS_API_KEY) {
-    // デバッグ情報を詳しく表示
+    // APIキーが見つからない場合
     console.error('🚨 Google Maps API Key not found!')
-    console.log('環境変数確認:', {
-      'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY': process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-      'NODE_ENV': process.env.NODE_ENV,
-      'All env vars starting with NEXT_PUBLIC': Object.keys(process.env).filter(key => key.startsWith('NEXT_PUBLIC'))
-    })
     
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="text-center text-red-600">
           <p>Google Maps API キーが設定されていません</p>
-          <p className="text-sm">Azure環境変数 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY を確認してください</p>
+          <p className="text-sm">Azure App Service の環境変数を確認してください</p>
           <p className="text-xs mt-2 text-gray-500">
-            デバッグ: NODE_ENV = {process.env.NODE_ENV}
+            APIキー取得に失敗しました
           </p>
         </div>
       </div>
