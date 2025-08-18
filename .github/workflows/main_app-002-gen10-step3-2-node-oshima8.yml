@@ -93,9 +93,21 @@ jobs:
           cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
           cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
           
-          # CRITICAL: Skip node_modules copy to prevent Azure tar.gz
-          echo "🚫 SKIP node_modules copy - Azure tar.gz breaks .next"
-          echo "🏗️ Azure will install dependencies via package.json instead"
+          # CRITICAL: Create .deployment file to disable Oryx
+          echo "🚫 Creating .deployment to disable Oryx build..."
+          echo "[config]" > deploy-package/.deployment
+          echo "SCM_DO_BUILD_DURING_DEPLOYMENT=false" >> deploy-package/.deployment
+          
+          # Copy node_modules for instant startup
+          echo "📦 Force copying node_modules..."
+          cp -r node_modules deploy-package/
+          
+          # Verify essential modules exist
+          echo "🔍 Verifying Next.js binary..."
+          if [ ! -f "deploy-package/node_modules/.bin/next" ]; then
+              echo "❌ CRITICAL: Next.js missing from node_modules!"
+              exit 1
+          fi
           
           # VERIFY .next exists and will be preserved
           echo "🔍 FINAL .next verification:"
