@@ -93,10 +93,14 @@ jobs:
           cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
           cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
           
-          # CRITICAL: Create .deployment file to disable Oryx
-          echo "🚫 Creating .deployment to disable Oryx build..."
-          echo "[config]" > deploy-package/.deployment
-          echo "SCM_DO_BUILD_DURING_DEPLOYMENT=false" >> deploy-package/.deployment
+          # CRITICAL: Create .deployment file at ROOT to disable Oryx
+          echo "🚫 Creating .deployment at project root to disable Oryx build..."
+          echo "[config]" > .deployment
+          echo "SCM_DO_BUILD_DURING_DEPLOYMENT=false" >> .deployment
+          echo "WEBSITE_DISABLE_NODE_MODULES_COMPRESSION=true" >> .deployment
+          
+          # Copy to deploy package too
+          cp .deployment deploy-package/
           
           # Copy node_modules for instant startup
           echo "📦 Force copying node_modules..."
