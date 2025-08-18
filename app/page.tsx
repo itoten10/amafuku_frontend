@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import { EnhancedGoogleMapRoute } from '@/components/EnhancedGoogleMapRoute'
 import { EnhancedSampleMapRoute } from '@/components/EnhancedSampleMapRoute'
 import { WorkingQuizPanel } from '@/components/WorkingQuizPanel'
 import { AIQuizPanel } from '@/components/AIQuizPanel'
-import { TrendingUp, Sparkles, GraduationCap } from 'lucide-react'
+import { TrendingUp, Sparkles, GraduationCap, User, LogOut } from 'lucide-react'
 
 interface RouteInfo {
   origin: string
@@ -25,6 +26,7 @@ interface HistoricalSpot {
 }
 
 export default function Home() {
+  const { data: session, status } = useSession()
   const [currentRoute, setCurrentRoute] = useState<RouteInfo | null>(null)
   const [historicalSpots, setHistoricalSpots] = useState<HistoricalSpot[]>([])
   const [selectedSpot, setSelectedSpot] = useState<HistoricalSpot | null>(null)
@@ -61,6 +63,18 @@ export default function Home() {
     setUserScore(prev => prev + points)
   }
 
+  // ローディング中の表示
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ヘッダー */}
@@ -84,6 +98,23 @@ export default function Home() {
               }`}>
                 {isGoogleMapsAvailable ? '🗺️ Google Maps' : '📍 サンプルモード'}
               </div>
+              {session?.user && (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <User className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm text-gray-700">
+                      {session.user.name || session.user.email}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => signOut()}
+                    className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>ログアウト</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

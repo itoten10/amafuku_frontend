@@ -41,8 +41,13 @@ next-env.d.ts
 # python
 *.pyc
 __pycache__/
-*.db
 DigiCertGlobalRootCA.crt.pem
+
+# database
+*.db
+*.db-journal
+/prisma/dev.db
+/prisma/dev.db-journal
 
 # IDEs and editors
 /.idea
