@@ -52,4 +52,4 @@ DigiCertGlobalRootCA.crt.pem
 *.launch
 .settings/
 *.sublime-workspace
-.vscode/
+.vscode/# Force fresh build - 2025年 8月19日 火曜日 00時18分16秒 JST
