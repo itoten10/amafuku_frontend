@@ -2,10 +2,10 @@
 
 echo "🚀 Starting Next.js application..."
 
-# Fast production install if node_modules missing
+# Install all dependencies for build
 if [ ! -d "node_modules" ]; then
-    echo "⚡ Installing production dependencies only..."
-    npm install --production --no-optional --silent
+    echo "⚡ Installing dependencies..."
+    npm install --no-optional --silent
 fi
 
 # Quick check for critical files
