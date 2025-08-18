@@ -50,14 +50,19 @@ jobs:
           echo "🔍 Built server routes:"
           ls -la .next/server/app/api/ || echo "No API directory found"
 
-      - name: Create deployment package
+      - name: Create deployment package  
         run: |
           # Create a clean package for deployment
+          rm -rf deploy-package
           mkdir -p deploy-package
           
-          # Copy essential files - CRITICAL: .next folder FIRST
-          echo "📦 Copying .next build folder..."
-          cp -r .next deploy-package/
+          # CRITICAL: Copy .next folder with force overwrite
+          echo "📦 Force copying .next build folder..."
+          cp -rf .next deploy-package/
+          
+          # Verify .next was copied completely
+          echo "🔍 Deployment package .next verification:"
+          ls -la deploy-package/.next/ | head -10
           
           # Verify API routes were copied
           echo "🔍 Verifying API routes in deployment package:"
