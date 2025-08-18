@@ -21,6 +21,7 @@ console.log('🚀 Starting Famoly Drive Next.js server...');
 console.log(`📦 Current directory: ${process.cwd()}`);
 console.log(`🔌 Port: ${port}`);
 console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+console.log(`📄 Files in current directory:`, require('fs').readdirSync('.').slice(0, 10));
 
 app.prepare().then(() => {
   const server = createServer((req, res) => {

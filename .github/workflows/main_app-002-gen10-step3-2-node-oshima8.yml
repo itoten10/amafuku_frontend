@@ -36,15 +36,20 @@ jobs:
 
       - name: Copy artifact for deployment job
         run: |
-          mkdir deploy
-          cp -r ./.next/standalone/. ./deploy
-          cp -r ./.next/static/. ./deploy/.next/static
-          cp -r ./public/. ./deploy/public
+          mkdir -p deploy/node_modules
+          # コアファイル
+          cp -r ./.next/standalone/. ./deploy/
+          cp -r ./.next/static ./deploy/.next/static
+          cp -r ./public ./deploy/public || echo "No public directory"
           cp server.js ./deploy/
           cp package.json ./deploy/
-          cp -r prisma ./deploy/
-          cp -r node_modules/.prisma ./deploy/node_modules/.prisma || true
-          cp -r node_modules/@prisma ./deploy/node_modules/@prisma || true
+          # Prisma関連
+          cp -r prisma ./deploy/ || echo "No prisma directory" 
+          mkdir -p ./deploy/node_modules/.prisma
+          cp -r node_modules/.prisma ./deploy/node_modules/ || echo "No .prisma directory"
+          cp -r node_modules/@prisma ./deploy/node_modules/ || echo "No @prisma directory"
+          # 実行権限設定
+          chmod +x ./deploy/server.js || true
 
       - name: Zip artifact for deployment
         run: zip release.zip ./deploy -r
