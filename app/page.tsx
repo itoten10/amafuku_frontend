@@ -118,20 +118,37 @@ export default function Home() {
                 {isGoogleMapsAvailable ? '🗺️ Google Maps' : '📍 サンプルモード'}
               </div>
               
-              {/* 認証済みユーザー情報 */}
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <User className="h-4 w-4 text-gray-600" />
-                  <span className="text-sm text-gray-700">{session.user?.name || 'ユーザー'}</span>
+              {/* 認証済みユーザー情報 - セッション状態で条件分岐 */}
+              {session ? (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <User className="h-4 w-4 text-gray-600" />
+                    <span className="text-sm text-gray-700">{session.user?.name || 'ユーザー'}</span>
+                  </div>
+                  <button
+                    onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+                    className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>ログアウト</span>
+                  </button>
                 </div>
-                <button
-                  onClick={() => signOut({ callbackUrl: '/auth/signin' })}
-                  className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>ログアウト</span>
-                </button>
-              </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <a
+                    href="/auth/signin"
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    ログイン
+                  </a>
+                  <a
+                    href="/auth/signup"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                  >
+                    新規登録
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>

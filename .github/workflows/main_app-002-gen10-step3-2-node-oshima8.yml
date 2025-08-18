@@ -25,14 +25,30 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install
-          # 古い.nextフォルダを強制削除してフレッシュビルド
+          # 強制的に全キャッシュクリア
+          npm cache clean --force
+          rm -rf node_modules
           rm -rf .next
+          rm -rf package-lock.json
+          
+          # 新しいインストール
+          npm install
+          
+          # フレッシュビルドでソースファイル確認
+          echo "🔍 Source files before build:"
+          ls -la app/api/auth/
+          ls -la app/auth/
+          
           npm run build
           npm run test --if-present
-          # ビルド結果を確認
+          
+          # ビルド結果の詳細確認
           echo "📦 Fresh build completed:"
-          ls -la .next/ | head -5
+          ls -la .next/ | head -10
+          echo "🔍 Built API routes:"
+          find .next -name "*auth*" -type f || echo "No auth files found"
+          echo "🔍 Built server routes:"
+          ls -la .next/server/app/api/ || echo "No API directory found"
 
       - name: Create deployment package
         run: |
