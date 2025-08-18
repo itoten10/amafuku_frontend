@@ -13,8 +13,7 @@ fi
 
 # Install dependencies
 echo "📦 Installing npm dependencies..."
-npm cache clean --force
-npm install --production --no-optional
+npm install --production --no-optional --prefer-offline --no-audit --no-fund
 
 # Verify critical dependencies are installed
 echo "🔍 Verifying dependencies..."
