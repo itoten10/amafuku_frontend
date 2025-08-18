@@ -86,11 +86,16 @@ jobs:
           cp postcss.config.js deploy-package/ 2>/dev/null || echo "No postcss config"
           cp tsconfig.json deploy-package/ 2>/dev/null || echo "No tsconfig"
           
-          # CRITICAL: Copy node_modules (Azure symlink may fail)
-          echo "📦 Copying node_modules..."
+          # CRITICAL: Copy node_modules AFTER .next (prevent overwrite)
+          echo "📦 Copying node_modules (preserving .next)..."
           cp -r node_modules deploy-package/ || echo "Failed to copy node_modules"
           
-          # Verify Next.js is available
+          # RE-VERIFY .next still exists after node_modules copy
+          echo "🔍 POST-COPY .next verification:"
+          ls -la deploy-package/.next/ | head -5 || echo "❌ .next OVERWRITTEN!"
+          ls -la deploy-package/.next/server/app/api/ || echo "❌ API ROUTES MISSING!"
+          
+          # Verify Next.js is available  
           echo "🔍 Next.js module verification:"
           ls -la deploy-package/node_modules/next/ | head -5 || echo "❌ NO NEXT.JS MODULE"
           
