@@ -18,6 +18,32 @@ try {
   prisma = null as any
 }
 
+// 明示的なベースURLの設定
+const getBaseUrl = () => {
+  if (process.env.NEXTAUTH_URL) {
+    console.log('🔍 Using NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
+    return process.env.NEXTAUTH_URL
+  }
+  // Azureのデフォルトホスト名を使用
+  if (process.env.WEBSITE_DEFAULT_HOSTNAME) {
+    const url = `https://${process.env.WEBSITE_DEFAULT_HOSTNAME}`
+    console.log('🔍 Using WEBSITE_DEFAULT_HOSTNAME:', url)
+    return url
+  }
+  // フォールバック
+  const fallbackUrl = 'https://app-002-gen10-step3-2-node-oshima8.azurewebsites.net'
+  console.log('🔍 Using fallback URL:', fallbackUrl)
+  return fallbackUrl
+}
+
+// デバッグ用: 実際のリダイレクトURIを出力
+const baseUrl = getBaseUrl()
+const redirectUri = `${baseUrl}/api/auth/callback/google`
+console.log('🔐 OAuth Configuration:')
+console.log('  Base URL:', baseUrl)
+console.log('  Redirect URI:', redirectUri)
+console.log('  Google Client ID:', process.env.AUTH_GOOGLE_ID)
+
 export const {
   auth,
   signIn,
@@ -35,7 +61,9 @@ export const {
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
-          scope: "openid email profile"
+          scope: "openid email profile",
+          // 明示的にリダイレクトURIを指定
+          redirect_uri: redirectUri
         }
       },
       allowDangerousEmailAccountLinking: true,
