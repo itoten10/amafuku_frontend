@@ -29,62 +29,49 @@ export async function GET(req: NextRequest) {
     }
 
     // データベースから全ユーザー情報を取得
-    const users = await prisma?.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        quizPoints: true,
-        createdAt: true,
-        updatedAt: true,
-        emailVerified: true,
-        image: true,
-        // パスワードは除外
-        accounts: {
-          select: {
-            provider: true,
-            createdAt: true
-          }
-        },
-        sessions: {
-          select: {
-            expires: true
-          },
-          take: 1,
-          orderBy: {
-            expires: 'desc'
-          }
-        }
-      },
-      orderBy: {
-        quizPoints: 'desc' // ポイント順でソート
-      }
-    })
+    const users = await prisma?.$queryRaw`
+      SELECT 
+        u.id,
+        u.name,
+        u.email,
+        u.quizPoints,
+        u.createdAt,
+        u.updatedAt,
+        u.emailVerified,
+        u.image,
+        GROUP_CONCAT(DISTINCT a.provider) as providers,
+        COUNT(DISTINCT s.id) as sessionCount,
+        MAX(s.expires) as lastSessionExpires
+      FROM User u
+      LEFT JOIN Account a ON u.id = a.userId
+      LEFT JOIN Session s ON u.id = s.userId
+      GROUP BY u.id, u.name, u.email, u.quizPoints, u.createdAt, u.updatedAt, u.emailVerified, u.image
+      ORDER BY u.quizPoints DESC
+    ` as any[]
 
     // 統計情報を計算
     const stats = {
       totalUsers: users?.length || 0,
-      totalPoints: users?.reduce((sum, user) => sum + (user.quizPoints || 0), 0) || 0,
+      totalPoints: users?.reduce((sum: number, user: any) => sum + (Number(user.quizPoints) || 0), 0) || 0,
       averagePoints: users?.length ? 
-        Math.round((users.reduce((sum, user) => sum + (user.quizPoints || 0), 0) / users.length)) : 0,
-      googleUsers: users?.filter(u => u.accounts.some(a => a.provider === 'google')).length || 0,
-      emailUsers: users?.filter(u => !u.accounts.some(a => a.provider === 'google')).length || 0,
-      activeToday: users?.filter(u => {
-        const lastSession = u.sessions[0]
-        if (!lastSession) return false
-        const expires = new Date(lastSession.expires)
+        Math.round((users.reduce((sum: number, user: any) => sum + (Number(user.quizPoints) || 0), 0) / users.length)) : 0,
+      googleUsers: users?.filter((u: any) => u.providers?.includes('google')).length || 0,
+      emailUsers: users?.filter((u: any) => !u.providers?.includes('google')).length || 0,
+      activeToday: users?.filter((u: any) => {
+        if (!u.lastSessionExpires) return false
+        const expires = new Date(u.lastSessionExpires)
         const now = new Date()
         return expires > now
       }).length || 0
     }
 
     // ランキング情報を追加
-    const ranking = users?.map((user, index) => ({
+    const ranking = users?.map((user: any, index: number) => ({
       rank: index + 1,
       name: user.name || 'Unknown',
       email: user.email,
-      points: user.quizPoints || 0,
-      provider: user.accounts[0]?.provider || 'credentials',
+      points: Number(user.quizPoints) || 0,
+      provider: user.providers?.split(',')[0] || 'credentials',
       registeredAt: user.createdAt,
       lastActive: user.updatedAt
     }))
@@ -95,12 +82,11 @@ export async function GET(req: NextRequest) {
       requestedBy: session?.user?.email || 'API Key',
       stats,
       ranking,
-      users: users?.map(user => ({
+      users: users?.map((user: any) => ({
         ...user,
+        quizPoints: Number(user.quizPoints) || 0,
         hasPassword: false, // パスワード情報は隠す
-        loginMethod: user.accounts.length > 0 ? 
-          user.accounts.map(a => a.provider).join(', ') : 
-          'email/password'
+        loginMethod: user.providers || 'email/password'
       }))
     })
 
