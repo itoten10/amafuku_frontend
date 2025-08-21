@@ -49,6 +49,11 @@ jobs:
           cp -r prisma deploy/ || echo "No prisma directory"
           # SSL証明書をコピー
           cp DigiCertGlobalRootCA.crt.pem deploy/ || echo "No SSL certificate"
+          # startup.shをコピー
+          cp startup.sh deploy/ || echo "No startup.sh"
+          chmod +x deploy/startup.sh || echo "Cannot chmod startup.sh"
+          # libディレクトリをコピー
+          cp -r lib deploy/ || echo "No lib directory"
           # 必要なnode_modulesをコピー
           mkdir -p deploy/node_modules
           cp -r node_modules/.prisma deploy/node_modules/ || echo "No .prisma directory"  
