@@ -45,6 +45,22 @@ export default function Home() {
     console.log('API Key preview:', apiKey ? `${apiKey.substring(0, 10)}...` : 'undefined')
   }, [])
 
+  // ユーザーのポイントをデータベースから読み込む
+  useEffect(() => {
+    if (session?.user) {
+      // ログインしている場合、データベースからポイントを取得
+      fetch('/api/user/points')
+        .then(res => res.json())
+        .then(data => {
+          if (data.points !== undefined) {
+            setUserScore(data.points)
+            console.log('📊 Loaded user points:', data.points)
+          }
+        })
+        .catch(err => console.error('Failed to load points:', err))
+    }
+  }, [session])
+
   // ローディング中の場合はローディング画面を表示
   if (status === 'loading') {
     return (
@@ -68,8 +84,31 @@ export default function Home() {
     setHistoricalSpots(spots)
   }
 
-  const handleScoreUpdate = (points: number) => {
-    setUserScore(prev => prev + points)
+  const handleScoreUpdate = async (points: number) => {
+    const newScore = userScore + points
+    setUserScore(newScore)
+    
+    // ログインしている場合、データベースに保存
+    if (session?.user) {
+      try {
+        const response = await fetch('/api/user/points', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ points: newScore })
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          console.log('✅ Points saved to database:', data.points)
+        } else {
+          console.error('Failed to save points')
+        }
+      } catch (error) {
+        console.error('Error saving points:', error)
+      }
+    }
   }
 
   const handleShareToNavigation = () => {
