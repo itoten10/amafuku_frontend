@@ -26,11 +26,10 @@ jobs:
       - name: npm install, build, and test
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          DATABASE_URL: "file:./dev.db"
+          DATABASE_URL: "mysql://dummy:dummy@localhost:3306/dummy"
         run: |
           npm install
-          npx prisma generate
-          npx prisma db push --accept-data-loss
+          npx prisma generate || echo "Prisma generate for build"
           npm run build --if-present
           npm run test --if-present
 

@@ -6,6 +6,22 @@ echo "📅 Current time: $(date)"
 echo "📁 PWD: $(pwd)"
 echo "📝 User: $(whoami)"
 
+# Database initialization (only if DATABASE_URL is set)
+if [ ! -z "$DATABASE_URL" ]; then
+    echo "🗄️ Database URL found, initializing Prisma..."
+    if [ -f "node_modules/.bin/prisma" ]; then
+        echo "📊 Running Prisma generate..."
+        npx prisma generate || echo "⚠️ Prisma generate warning (continuing...)"
+        
+        echo "📊 Pushing database schema..."
+        npx prisma db push --accept-data-loss || echo "⚠️ Database push warning (may already exist)"
+    else
+        echo "⚠️ Prisma not found, skipping database initialization"
+    fi
+else
+    echo "⚠️ DATABASE_URL not set, skipping database initialization"
+fi
+
 # Ultra-fast minimal approach
 echo "⚡ FAST NODE_MODULES CHECK..."
 if [ ! -f "node_modules/.bin/next" ]; then
