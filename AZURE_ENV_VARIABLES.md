@@ -13,9 +13,17 @@
 ## 必要な環境変数一覧
 
 ### 1. DATABASE_URL (最重要)
+
+**現在設定中の形式:**
 ```
 名前: DATABASE_URL
 値: mysql://tech0gen10student:vY7JZNfU@rdbs-002-gen10-step3-2-oshima8.mysql.database.azure.com:3306/drivingstudy?ssl={"ca":"/home/site/wwwroot/DigiCertGlobalRootCA.crt.pem"}
+```
+
+**もしまだSSLエラーが出る場合は、この形式を試してください:**
+```
+名前: DATABASE_URL
+値: mysql://tech0gen10student:vY7JZNfU@rdbs-002-gen10-step3-2-oshima8.mysql.database.azure.com:3306/drivingstudy?sslaccept=strict
 ```
 
 ### 2. NextAuth関連

@@ -2,21 +2,8 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
-
-// Prismaクライアントを安全に初期化
-let prisma: PrismaClient
-try {
-  prisma = new PrismaClient({
-    log: ['error'],
-    errorFormat: 'minimal'
-  })
-} catch (error) {
-  console.error('❌ Prisma initialization failed:', error)
-  // フォールバック: Prismaなしでも認証は動作させる
-  prisma = null as any
-}
+import prisma from "./lib/prisma"
 
 // 明示的なベースURLの設定
 const getBaseUrl = () => {

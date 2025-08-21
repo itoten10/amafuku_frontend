@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
-
-const prisma = new PrismaClient()
+import prisma from '@/lib/prisma'
 
 export async function POST(req: NextRequest) {
   try {
     const { name, email, password } = await req.json()
+
+    // Prismaクライアントのチェック
+    if (!prisma) {
+      console.error('❌ Prisma client is not initialized')
+      return NextResponse.json(
+        { error: 'データベース接続エラー' },
+        { status: 500 }
+      )
+    }
 
     // 入力値の検証
     if (!name || !email || !password) {
