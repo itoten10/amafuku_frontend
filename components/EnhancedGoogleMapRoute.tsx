@@ -412,46 +412,90 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
   }
 
   const generateEnhancedDescription = (name: string, keyword: string, category: string): string => {
+    // 有名な固有名詞に対する特別な説明（優先度高）
+    if (name.includes('鶴岡八幡宮')) {
+      return `${name}は源頼朝が鎌倉幕府の守護神として整備し、武家政権の精神的中心となった神社です。`
+    } else if (name.includes('建長寺')) {
+      return `${name}は鎌倉五山第一位の禅宗寺院で、日本における臨済宗の中心道場として栄えました。`
+    } else if (name.includes('円覚寺')) {
+      return `${name}は北条時宗が元寇の戦没者追悼のため創建した、鎌倉五山第二位の名刹です。`
+    } else if (name.includes('小田原城')) {
+      return `${name}は戦国時代に北条氏の本拠地として難攻不落を誇り、関東支配の要となった城郭です。`
+    } else if (name.includes('江島神社') || name.includes('江ノ島')) {
+      return `${name}は日本三大弁財天の一つで、海上交通の守護神として古来より信仰を集めています。`
+    } else if (name.includes('大仏') || name.includes('高徳院')) {
+      return `${name}は鎌倉時代に建立された国宝の大仏を擁し、日本の仏教彫刻の最高傑作の一つです。`
+    } else if (name.includes('報国寺')) {
+      return `${name}は竹の庭で有名な臨済宗の寺院で、足利家時ゆかりの歴史を持ちます。`
+    } else if (name.includes('長谷寺')) {
+      return `${name}は十一面観音像で知られ、鎌倉の海を見渡す景勝地としても親しまれています。`
+    }
+    
+    // キーワードベースの詳細な説明（カテゴリーと組み合わせ）
     const descriptions: { [key: string]: { [key: string]: string } } = {
       castles: {
         default: `${name}は日本の城郭建築の歴史を物語る重要な史跡です。`,
         '城': `${name}は戦国時代から江戸時代にかけての日本の軍事・政治の中心地でした。`,
         '天守': `${name}の天守は、当時の建築技術と防御思想を現代に伝える貴重な文化財です。`,
-        '城跡': `${name}は往時の城郭の姿を偲ばせる重要な遺跡です。`
+        '城跡': `${name}は往時の城郭の姿を偲ばせる重要な遺跡です。`,
+        '城址': `${name}は歴史の舞台となった城の跡地で、当時の石垣や堀が残されています。`
       },
       temples: {
         default: `${name}は日本の仏教文化と建築技術の粋を集めた寺院です。`,
         '寺': `${name}は長い歴史を持ち、地域の信仰の中心として栄えてきました。`,
+        '院': `${name}は格式高い寺院で、多くの文化財を今に伝えています。`,
         '国宝': `${name}には国宝に指定された貴重な文化財が保存されています。`,
-        '五重塔': `${name}の五重塔は、日本建築の美と技術の結晶です。`
+        '五重塔': `${name}の五重塔は、日本建築の美と技術の結晶です。`,
+        '観音': `${name}は観世音菩薩を本尊とし、人々の願いを聞き届ける霊場です。`,
+        '不動': `${name}は不動明王を祀り、厄除けの霊場として信仰されています。`,
+        '地蔵': `${name}は地蔵菩薩を祀り、子供の守護と旅の安全を願う寺院です。`
       },
       shrines: {
         default: `${name}は日本の神道文化と地域の歴史を今に伝える神社です。`,
         '神社': `${name}は古来より地域の守り神として崇敬されてきました。`,
-        '大社': `${name}は全国に分社を持つ、格式高い神社です。`
+        '大社': `${name}は全国に分社を持つ、格式高い神社です。`,
+        '八幡': `${name}は武家の守護神・八幡神を祀る由緒ある神社です。`,
+        '稲荷': `${name}は商売繁盛・五穀豊穣の神として信仰される稲荷神社です。`,
+        '天満': `${name}は学問の神・菅原道真を祀る天満宮です。`,
+        '神宮': `${name}は皇室とゆかりが深い、格式の高い神社です。`
       },
       battles: {
         default: `${name}は日本史上の重要な戦いが行われた場所です。`,
         '古戦場': `${name}では歴史を変えた重要な合戦が繰り広げられました。`,
-        '合戦': `${name}の戦いは、その後の日本の歴史に大きな影響を与えました。`
+        '合戦': `${name}の戦いは、その後の日本の歴史に大きな影響を与えました。`,
+        '戦跡': `${name}は戦国時代の激戦地として知られる史跡です。`
       },
       edo: {
         default: `${name}は江戸時代の日本の姿を今に伝える貴重な史跡です。`,
         '宿場': `${name}は江戸時代の五街道の要所として栄えた宿場町でした。`,
-        '街道': `${name}は江戸と地方を結ぶ重要な交通路でした。`
+        '街道': `${name}は江戸と地方を結ぶ重要な交通路でした。`,
+        '関所': `${name}は江戸幕府の治安維持のため設置された関所跡です。`
       },
       geography: {
         default: `${name}は日本の自然地理と人々の暮らしの関わりを学べる場所です。`,
         '山': `${name}は古来より信仰の対象となり、日本の山岳文化を育んできました。`,
-        '川': `${name}は流域の文化と産業の発展に重要な役割を果たしてきました。`
+        '川': `${name}は流域の文化と産業の発展に重要な役割を果たしてきました。`,
+        '湖': `${name}は景勝地として知られ、多くの文学作品の舞台となってきました。`
       }
     }
-
-    const categoryDescs = descriptions[category] || descriptions.default
-    const desc = categoryDescs[keyword] || categoryDescs.default || 
-                 `${name}は日本の歴史と文化を学ぶ上で重要な場所です。`
     
-    return desc
+    // カテゴリーと一致する説明を探す
+    const categoryDescs = descriptions[category] || descriptions.default
+    if (categoryDescs) {
+      // キーワードに一致する説明を探す
+      for (const [key, desc] of Object.entries(categoryDescs)) {
+        if (key !== 'default' && name.includes(key)) {
+          return desc
+        }
+      }
+      // デフォルト説明を返す
+      if (categoryDescs.default) {
+        return categoryDescs.default
+      }
+    }
+    
+    // 最終的なフォールバック
+    return `${name}は日本の歴史と文化を学ぶ上で重要な場所です。`
   }
 
   const getHistoricalPeriod = (name: string, keyword: string): string => {
@@ -478,20 +522,62 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
   }
 
   const getHistoricalSignificance = (name: string, category: string): string => {
-    const significance: { [key: string]: string } = {
-      castles: '軍事・政治の中心地',
-      temples: '仏教文化の伝承地',
-      shrines: '神道信仰の聖地',
-      battles: '歴史的転換点',
-      historical_figures: '偉人ゆかりの地',
-      edo: '江戸文化の遺産',
-      sengoku: '戦国時代の舞台',
-      geography: '自然と歴史の交差点',
-      industry: '産業発展の礎',
-      culture: '日本文化の発信地'
+    // スポット名から重要性を動的に判定
+    
+    // 固有名詞による特別な重要性
+    if (name.includes('鶴岡八幡宮')) {
+      return '鎌倉幕府の精神的中枢'
+    } else if (name.includes('建長寺') || name.includes('円覚寺')) {
+      return '鎌倉五山の中核寺院'
+    } else if (name.includes('小田原城')) {
+      return '関東支配の要衝'
+    } else if (name.includes('大仏') || name.includes('高徳院')) {
+      return '国宝・文化財の宝庫'
+    } else if (name.includes('江島') || name.includes('江ノ島')) {
+      return '海上交通の要所'
     }
-
-    return significance[category] || '歴史的重要地点'
+    
+    // キーワードによる重要性の判定
+    if (name.includes('八幡')) {
+      return '武家の守護神社'
+    } else if (name.includes('稲荷')) {
+      return '商業・農業の守護社'
+    } else if (name.includes('天満') || name.includes('天神')) {
+      return '学問・文化の聖地'
+    } else if (name.includes('五山') || name.includes('十刹')) {
+      return '禅宗の名刹'
+    } else if (name.includes('国宝') || name.includes('重要文化財')) {
+      return '文化財保護地'
+    } else if (name.includes('城') || name.includes('城跡')) {
+      return '防衛・統治の拠点'
+    } else if (name.includes('宿') || name.includes('宿場')) {
+      return '街道文化の継承地'
+    } else if (name.includes('港') || name.includes('湊')) {
+      return '海運・交易の中心'
+    } else if (name.includes('市') || name.includes('市場')) {
+      return '商業・経済の中心地'
+    }
+    
+    // カテゴリーベースの重要性（多様化版）
+    const categorySignificance: { [key: string]: string[] } = {
+      castles: ['防衛・統治の拠点', '武家文化の象徴', '築城技術の結晶'],
+      temples: ['仏教文化の中心', '学問・修行の道場', '芸術文化の保護地', '地域信仰の拠点'],
+      shrines: ['神道信仰の聖地', '地域守護の中心', '祭礼文化の継承地', '氏子共同体の核'],
+      battles: ['歴史的転換点', '武士道精神の舞台', '戦略要地'],
+      historical_figures: ['偉人ゆかりの地', '文化継承の場', '歴史教育の拠点'],
+      edo: ['江戸文化の遺産', '街道文化の要所', '町人文化の発祥地'],
+      geography: ['自然崇拝の対象', '産業発展の基盤', '交通の要衝']
+    }
+    
+    // カテゴリーに応じてランダムに選択（多様性を持たせる）
+    const significanceList = categorySignificance[category]
+    if (significanceList && significanceList.length > 0) {
+      // スポット名のハッシュ値を使って決定的に選択（同じスポットは常に同じ重要性）
+      const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+      return significanceList[hash % significanceList.length]
+    }
+    
+    return '歴史文化遺産'
   }
 
   const addMarkerToMap = (spot: HistoricalSpot) => {
@@ -569,7 +655,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
         
         <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
           <p className="text-sm text-gray-700">
-🗺️ ルート沿いの歴史スポットを検索！スポットのクイズも生成！
+ルート沿いの歴史スポットを検索！スポットのクイズも生成！
           </p>
         </div>
 

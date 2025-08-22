@@ -5,8 +5,11 @@ import { auth } from '@/auth'
 // 簡易的な管理者チェック（本番環境では改善が必要）
 const ADMIN_EMAILS = [
   'masato.ito.w7@gmail.com',
-  'masatest0819@gmail.com'
+  'masatest0819@gmail.com',
   // 他のログインメールアドレスがあれば追加
+  'sayacoco0326@gmail.com',
+  'hkatapi@gmail.com',
+  'ryo.t.sust@gmail.com'
 ]
 
 export async function GET(req: NextRequest) {

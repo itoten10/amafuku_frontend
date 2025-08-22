@@ -66,7 +66,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
         setIsAnswered(false)
         setIsCorrect(false)
         
-        const method = data.generated_by === 'openai' ? '🤖 AI生成' : '📚 固定データ'
+        const method = data.generated_by === 'openai' ? 'AI生成' : '📚 固定データ'
         toast.success(`${method}クイズを作成しました！`)
       } else {
         throw new Error('クイズデータの取得に失敗しました')

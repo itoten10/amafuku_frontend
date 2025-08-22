@@ -129,11 +129,8 @@ export default function Home() {
                 alt="Car Icon" 
                 className="h-6 w-6 md:h-8 md:w-8 object-contain"
               />
-              <h1 className="text-base md:text-xl font-bold text-gray-900 hidden sm:block">
+              <h1 className="text-base md:text-xl font-bold text-gray-900">
                 Driving Study
-              </h1>
-              <h1 className="text-base md:text-xl font-bold text-gray-900 sm:hidden">
-                DS
               </h1>
             </div>
             <div className="flex items-center space-x-2 md:space-x-4">
