@@ -102,7 +102,7 @@ export default function AdminPage() {
                 <p className="text-sm text-gray-600">平均ポイント</p>
                 <p className="text-2xl font-bold text-gray-900">{data?.stats?.averagePoints || 0}</p>
               </div>
-              <Activity className="h-8 w-8 text-green-600" />
+              <Activity className="h-8 w-8 text-gray-600" />
             </div>
           </div>
 
@@ -125,9 +125,9 @@ export default function AdminPage() {
               <p className="text-sm text-gray-600">Googleログイン</p>
               <p className="text-xl font-bold text-red-600">{data?.stats?.googleUsers || 0} 人</p>
             </div>
-            <div className="bg-green-50 rounded p-4">
+            <div className="bg-gray-50 rounded p-4">
               <p className="text-sm text-gray-600">メール/パスワード</p>
-              <p className="text-xl font-bold text-green-600">{data?.stats?.emailUsers || 0} 人</p>
+              <p className="text-xl font-bold text-gray-600">{data?.stats?.emailUsers || 0} 人</p>
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default function AdminPage() {
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         user.provider === 'google' 
                           ? 'bg-red-100 text-red-800' 
-                          : 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
                       }`}>
                         {user.provider === 'google' ? 'Google' : 'Email'}
                       </span>

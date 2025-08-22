@@ -127,10 +127,10 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
           </div>
 
           {/* AI機能の説明 */}
-          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
+          <div className="p-4 bg-gray-50 rounded-lg border">
             <div className="flex items-center mb-2">
               <Zap className="h-5 w-5 text-red-600 mr-2" />
-              <span className="font-medium text-red-800">AI動的クイズ生成</span>
+              <span className="font-medium text-red-800">各スポットのクイズを自動生成！AIクイズでは1.5倍ボーナス！</span>
             </div>
             <p className="text-sm text-red-700">
               OpenAI APIが各スポット固有の詳細なクイズを自動生成します。
@@ -156,7 +156,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
           <button
             onClick={generateAIQuiz}
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-md hover:from-blue-700 hover:to-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {loading ? (
               <>
@@ -205,7 +205,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
                 className={`w-full text-left p-3 rounded-lg border-2 transition ${
                   isAnswered
                     ? index === quiz.correct_answer
-                      ? 'border-green-500 bg-green-50'
+                      ? 'border-gray-400 bg-gray-50'
                       : index === selectedAnswer && !isCorrect
                       ? 'border-red-500 bg-red-50'
                       : 'border-gray-200 bg-gray-50'
@@ -217,7 +217,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
                 <div className="flex items-center justify-between">
                   <span>{option}</span>
                   {isAnswered && index === quiz.correct_answer && (
-                    <Check className="h-5 w-5 text-green-600" />
+                    <Check className="h-5 w-5 text-gray-600" />
                   )}
                   {isAnswered && index === selectedAnswer && !isCorrect && (
                     <X className="h-5 w-5 text-red-600" />
@@ -229,15 +229,15 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
 
           {isAnswered && (
             <div className={`p-4 rounded-lg ${
-              isCorrect ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200'
+              isCorrect ? 'bg-gray-50 border border-gray-200' : 'bg-yellow-50 border border-yellow-200'
             }`}>
               <div className="flex items-start space-x-2">
                 <AlertCircle className={`h-5 w-5 mt-0.5 ${
-                  isCorrect ? 'text-green-600' : 'text-yellow-600'
+                  isCorrect ? 'text-gray-600' : 'text-yellow-600'
                 }`} />
                 <div>
                   <p className={`font-medium ${
-                    isCorrect ? 'text-green-800' : 'text-yellow-800'
+                    isCorrect ? 'text-gray-800' : 'text-yellow-800'
                   }`}>
                     {isCorrect ? '正解です！' : 'もう一度考えてみましょう'}
                   </p>
@@ -261,7 +261,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
             ) : (
               <button
                 onClick={generateAIQuiz}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-md hover:from-blue-700 hover:to-purple-700 transition"
+                className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
               >
                 新しいAIクイズ
               </button>

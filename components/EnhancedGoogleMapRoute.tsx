@@ -569,7 +569,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
         
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-800">
-            🎓 日本史・地理に特化した教育的価値の高いスポットを優先的に検索します
+🗺️ ルートに応じた歴史に関するスポットを検索！スポットに応じたクイズも出すよ！
           </p>
         </div>
 
