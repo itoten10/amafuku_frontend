@@ -57,7 +57,7 @@ export default function AdminPage() {
           <p className="text-red-600 mb-4">エラー: {error}</p>
           <button 
             onClick={fetchData}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             再試行
           </button>
@@ -82,7 +82,7 @@ export default function AdminPage() {
                 <p className="text-sm text-gray-600">総ユーザー数</p>
                 <p className="text-2xl font-bold text-gray-900">{data?.stats?.totalUsers || 0}</p>
               </div>
-              <Users className="h-8 w-8 text-blue-600" />
+              <Users className="h-8 w-8 text-red-600" />
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export default function AdminPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-blue-50 rounded p-4">
               <p className="text-sm text-gray-600">Googleログイン</p>
-              <p className="text-xl font-bold text-blue-600">{data?.stats?.googleUsers || 0} 人</p>
+              <p className="text-xl font-bold text-red-600">{data?.stats?.googleUsers || 0} 人</p>
             </div>
             <div className="bg-green-50 rounded p-4">
               <p className="text-sm text-gray-600">メール/パスワード</p>
@@ -179,12 +179,12 @@ export default function AdminPage() {
                       <div className="text-sm text-gray-500">{user.email}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-bold text-blue-600">{user.points} pt</div>
+                      <div className="text-sm font-bold text-red-600">{user.points} pt</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         user.provider === 'google' 
-                          ? 'bg-blue-100 text-blue-800' 
+                          ? 'bg-red-100 text-red-800' 
                           : 'bg-green-100 text-green-800'
                       }`}>
                         {user.provider === 'google' ? 'Google' : 'Email'}
@@ -203,7 +203,7 @@ export default function AdminPage() {
         <div className="mt-8 text-center">
           <button
             onClick={fetchData}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
           >
             データを更新
           </button>

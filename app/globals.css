@@ -2,6 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+/* HONDA Red custom colors */
+:root {
+  --honda-red: #C8102E;
+  --honda-red-50: #fef2f2;
+  --honda-red-100: #fee2e2;
+  --honda-red-500: #ef4444;
+  --honda-red-600: #C8102E;
+  --honda-red-700: #b91c1c;
+  --honda-red-800: #991b1b;
+}
+
+/* Apply HONDA Red to Tailwind's red utilities */
+.bg-red-600 {
+  background-color: var(--honda-red) !important;
+}
+
+.text-red-600 {
+  color: var(--honda-red) !important;
+}
+
+.border-red-500 {
+  border-color: var(--honda-red-500) !important;
+}
+
+.bg-red-50 {
+  background-color: var(--honda-red-50) !important;
+}
+
+.bg-red-100 {
+  background-color: var(--honda-red-100) !important;
+}
+
+.text-red-800 {
+  color: var(--honda-red-800) !important;
+}
+
+.bg-red-700:hover,
+.hover\:bg-red-700:hover {
+  background-color: var(--honda-red-700) !important;
+}
+
+.focus\:ring-red-500:focus {
+  --tw-ring-color: var(--honda-red-500) !important;
+}
+
+.focus\:border-red-500:focus {
+  border-color: var(--honda-red-500) !important;
+}
+
 /* Leaflet map styles */
 .leaflet-container {
   width: 100%;

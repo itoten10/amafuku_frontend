@@ -124,14 +124,18 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-blue-600 rounded"></div>
+              <img 
+                src="/car_icon.png" 
+                alt="Car Icon" 
+                className="h-8 w-8 object-contain"
+              />
               <h1 className="text-xl font-bold text-gray-900">
                 Driving Study
               </h1>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                あなたのスコア: <span className="font-bold text-blue-600">{userScore}点</span>
+                あなたのスコア: <span className="font-bold text-red-600">{userScore}点</span>
               </div>
               <div className="text-xs px-2 py-1 rounded bg-green-100 text-green-800">
                 🗺️ Google Maps
@@ -156,13 +160,13 @@ export default function Home() {
                 <div className="flex items-center space-x-3">
                   <a
                     href="/auth/signin"
-                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-sm text-red-600 hover:text-red-700 font-medium"
                   >
                     ログイン
                   </a>
                   <a
                     href="/auth/signup"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
                   >
                     新規登録
                   </a>
@@ -229,13 +233,13 @@ export default function Home() {
             {/* スコアボード */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />
+                <TrendingUp className="h-5 w-5 mr-2 text-red-600" />
                 ランキング
               </h2>
               <div className="mb-6 p-4 bg-blue-50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">あなたのスコア</span>
-                  <span className="text-2xl font-bold text-blue-600">{userScore}点</span>
+                  <span className="text-2xl font-bold text-red-600">{userScore}点</span>
                 </div>
               </div>
               <div className="space-y-2">
@@ -254,9 +258,9 @@ export default function Home() {
                   <span className="font-semibold">450点</span>
                 </div>
                 {userScore > 0 && (
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-blue-100 border border-blue-300">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-red-100 border border-red-300">
                     <div className="flex items-center space-x-3">
-                      <span className="text-lg font-semibold text-blue-600">3位</span>
+                      <span className="text-lg font-semibold text-red-600">3位</span>
                       <span className="font-medium">あなた</span>
                     </div>
                     <span className="font-semibold">{userScore}点</span>
@@ -306,7 +310,7 @@ export default function Home() {
                         onClick={() => setSelectedSpot(spot)}
                         className={`w-full text-left p-4 rounded-lg border transition ${
                           selectedSpot?.place_id === spot.place_id
-                            ? 'border-blue-500 bg-blue-50 shadow-md'
+                            ? 'border-red-500 bg-red-50 shadow-md'
                             : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                       >
@@ -317,7 +321,7 @@ export default function Home() {
                               <span className="font-semibold text-gray-900 truncate">{spot.name}</span>
                             </div>
                             {enhancedSpot.historical_period && (
-                              <div className="text-xs text-blue-600 mb-1">
+                              <div className="text-xs text-red-600 mb-1">
                                 📅 {enhancedSpot.historical_period}
                               </div>
                             )}
@@ -363,7 +367,7 @@ export default function Home() {
                     onClick={() => setQuizMode('basic')}
                     className={`flex-1 py-2 px-3 rounded-md text-sm transition ${
                       quizMode === 'basic'
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-red-600 text-white'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
@@ -373,7 +377,7 @@ export default function Home() {
                     onClick={() => setQuizMode('ai')}
                     className={`flex-1 py-2 px-3 rounded-md text-sm transition flex items-center justify-center ${
                       quizMode === 'ai'
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                        ? 'bg-gradient-to-r from-red-600 to-red-800 text-white'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
