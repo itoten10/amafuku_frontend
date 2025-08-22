@@ -33,18 +33,18 @@ export async function GET(req: NextRequest) {
     let users: any[] = []
     
     if (prisma) {
-      users = await prisma.$queryRaw`
+      const rawUsers = await prisma.$queryRaw`
         SELECT 
           u.id,
           u.name,
           u.email,
-          u.quizPoints,
+          CAST(u.quizPoints AS SIGNED) as quizPoints,
           u.createdAt,
           u.updatedAt,
           u.emailVerified,
           u.image,
           GROUP_CONCAT(DISTINCT a.provider) as providers,
-          COUNT(DISTINCT s.id) as sessionCount,
+          CAST(COUNT(DISTINCT s.id) AS SIGNED) as sessionCount,
           MAX(s.expires) as lastSessionExpires
         FROM User u
         LEFT JOIN Account a ON u.id = a.userId
@@ -52,14 +52,39 @@ export async function GET(req: NextRequest) {
         GROUP BY u.id, u.name, u.email, u.quizPoints, u.createdAt, u.updatedAt, u.emailVerified, u.image
         ORDER BY u.quizPoints DESC
       ` as any[]
+      
+      // BigIntを通常の数値に変換し、全ての値をJSONシリアライズ可能に変換
+      users = rawUsers.map(user => {
+        const processedUser: any = {}
+        
+        for (const [key, value] of Object.entries(user)) {
+          if (typeof value === 'bigint') {
+            processedUser[key] = Number(value)
+          } else if (value instanceof Date) {
+            processedUser[key] = value.toISOString()
+          } else {
+            processedUser[key] = value
+          }
+        }
+        
+        return {
+          ...processedUser,
+          quizPoints: Number(processedUser.quizPoints) || 0,
+          sessionCount: Number(processedUser.sessionCount) || 0,
+          createdAt: processedUser.createdAt ? new Date(processedUser.createdAt).toISOString() : null,
+          updatedAt: processedUser.updatedAt ? new Date(processedUser.updatedAt).toISOString() : null,
+          emailVerified: processedUser.emailVerified ? new Date(processedUser.emailVerified).toISOString() : null,
+          lastSessionExpires: processedUser.lastSessionExpires ? new Date(processedUser.lastSessionExpires).toISOString() : null
+        }
+      })
     }
 
     // 統計情報を計算
     const stats = {
       totalUsers: users.length || 0,
-      totalPoints: users.reduce((sum: number, user: any) => sum + (Number(user.quizPoints) || 0), 0) || 0,
+      totalPoints: users.reduce((sum: number, user: any) => sum + (user.quizPoints || 0), 0) || 0,
       averagePoints: users.length ? 
-        Math.round((users.reduce((sum: number, user: any) => sum + (Number(user.quizPoints) || 0), 0) / users.length)) : 0,
+        Math.round((users.reduce((sum: number, user: any) => sum + (user.quizPoints || 0), 0) / users.length)) : 0,
       googleUsers: users.filter((u: any) => u.providers?.includes('google')).length || 0,
       emailUsers: users.filter((u: any) => !u.providers?.includes('google')).length || 0,
       activeToday: users.filter((u: any) => {
@@ -75,7 +100,7 @@ export async function GET(req: NextRequest) {
       rank: index + 1,
       name: user.name || 'Unknown',
       email: user.email,
-      points: Number(user.quizPoints) || 0,
+      points: user.quizPoints || 0,
       provider: user.providers?.split(',')[0] || 'credentials',
       registeredAt: user.createdAt,
       lastActive: user.updatedAt
