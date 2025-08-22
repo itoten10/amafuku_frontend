@@ -17,11 +17,17 @@ export default function AdminPage() {
   const fetchData = async () => {
     try {
       setLoading(true)
-      // APIキーを使用してアクセス（開発用）
-      const response = await fetch('/api/admin/users?key=admin-driving-study-2025')
+      // まず認証でアクセスを試みる
+      let response = await fetch('/api/admin/users')
+      
+      // 認証失敗の場合、APIキーでアクセス
+      if (response.status === 403) {
+        response = await fetch('/api/admin/users?key=admin-driving-study-2025')
+      }
       
       if (!response.ok) {
-        throw new Error('データの取得に失敗しました')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'データの取得に失敗しました')
       }
       
       const result = await response.json()
