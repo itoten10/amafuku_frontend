@@ -122,50 +122,58 @@ export default function Home() {
       {/* ヘッダー */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-between h-16 md:h-16">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <img 
                 src="/car_icon.png" 
                 alt="Car Icon" 
-                className="h-8 w-8 object-contain"
+                className="h-6 w-6 md:h-8 md:w-8 object-contain"
               />
-              <h1 className="text-xl font-bold text-gray-900">
+              <h1 className="text-base md:text-xl font-bold text-gray-900 hidden sm:block">
                 Driving Study
               </h1>
+              <h1 className="text-base md:text-xl font-bold text-gray-900 sm:hidden">
+                DS
+              </h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600">
-                あなたのスコア: <span className="font-bold text-gray-900">{userScore}点</span>
+            <div className="flex items-center space-x-2 md:space-x-4">
+              <div className="text-xs md:text-sm text-gray-600">
+                <span className="hidden sm:inline">あなたのスコア: </span>
+                <span className="sm:hidden">スコア: </span>
+                <span className="font-bold text-gray-900">{userScore}点</span>
               </div>
               
               {/* 認証済みユーザー情報 - セッション状態で条件分岐 */}
               {session ? (
-                <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4 text-gray-600" />
-                    <span className="text-sm text-gray-700">{session.user?.name || 'ユーザー'}</span>
+                <div className="flex items-center space-x-2 md:space-x-3">
+                  <div className="flex items-center space-x-1 md:space-x-2">
+                    <User className="h-3 w-3 md:h-4 md:w-4 text-gray-600" />
+                    <span className="text-xs md:text-sm text-gray-700 max-w-[80px] md:max-w-none truncate">
+                      {session.user?.name || 'ユーザー'}
+                    </span>
                   </div>
                   <button
                     onClick={() => signOut({ callbackUrl: '/auth/signin' })}
-                    className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700"
+                    className="flex items-center space-x-1 text-xs md:text-sm text-red-600 hover:text-red-700"
                   >
-                    <LogOut className="h-4 w-4" />
-                    <span>ログアウト</span>
+                    <LogOut className="h-3 w-3 md:h-4 md:w-4" />
+                    <span className="hidden sm:inline">ログアウト</span>
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 md:space-x-3">
                   <a
                     href="/auth/signin"
-                    className="text-sm text-red-600 hover:text-red-700 font-medium"
+                    className="text-xs md:text-sm text-red-600 hover:text-red-700 font-medium"
                   >
                     ログイン
                   </a>
                   <a
                     href="/auth/signup"
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md text-xs md:text-sm font-medium"
                   >
-                    新規登録
+                    <span className="hidden sm:inline">新規登録</span>
+                    <span className="sm:hidden">登録</span>
                   </a>
                 </div>
               )}
@@ -192,7 +200,7 @@ export default function Home() {
                   <h3 className="font-semibold">ルート情報</h3>
                   <button
                     onClick={handleShareToNavigation}
-                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
                   >
                     📱 ナビに共有
                   </button>

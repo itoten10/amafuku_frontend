@@ -128,7 +128,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
 
           {/* AI機能の説明 */}
           <div className="p-4 bg-gray-50 rounded-lg border">
-            <div className="flex items-center mb-2">
+            <div className="flex items-center justify-center">
               <Zap className="h-5 w-5 text-red-600 mr-2" />
               <span className="font-medium text-gray-800">各スポットのクイズを自動生成！AIクイズでは1.5倍ボーナス！</span>
             </div>
@@ -172,7 +172,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
           {/* 生成方式の表示 */}
           <div className={`p-2 rounded-lg text-sm flex items-center ${
             generatedBy === 'openai' 
-              ? 'bg-red-100 text-red-800' 
+              ? 'bg-gray-100 text-gray-800' 
               : 'bg-gray-100 text-gray-600'
           }`}>
             {generatedBy === 'openai' ? (
@@ -188,7 +188,7 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
             )}
           </div>
 
-          <div className="p-4 bg-red-50 rounded-lg">
+          <div className="p-4 bg-gray-50 rounded-lg">
             <p className="font-medium text-gray-900">{quiz.question}</p>
           </div>
 
@@ -203,10 +203,10 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
                     ? index === quiz.correct_answer
                       ? 'border-gray-400 bg-gray-50'
                       : index === selectedAnswer && !isCorrect
-                      ? 'border-red-500 bg-red-50'
+                      ? 'border-gray-500 bg-gray-50'
                       : 'border-gray-200 bg-gray-50'
                     : selectedAnswer === index
-                    ? 'border-red-500 bg-red-50'
+                    ? 'border-gray-500 bg-gray-50'
                     : 'border-gray-200 hover:border-gray-300'
                 } ${isAnswered ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >

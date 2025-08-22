@@ -273,7 +273,7 @@ export function WorkingQuizPanel({ spot, onScoreUpdate }: WorkingQuizPanelProps)
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="p-4 bg-red-50 rounded-lg">
+          <div className="p-4 bg-gray-50 rounded-lg">
             <p className="font-medium text-gray-900">{quiz.question}</p>
           </div>
 
@@ -288,10 +288,10 @@ export function WorkingQuizPanel({ spot, onScoreUpdate }: WorkingQuizPanelProps)
                     ? index === quiz.correct_answer
                       ? 'border-gray-400 bg-gray-50'
                       : index === selectedAnswer && !isCorrect
-                      ? 'border-red-500 bg-red-50'
+                      ? 'border-gray-500 bg-gray-50'
                       : 'border-gray-200 bg-gray-50'
                     : selectedAnswer === index
-                    ? 'border-red-500 bg-red-50'
+                    ? 'border-gray-500 bg-gray-50'
                     : 'border-gray-200 hover:border-gray-300'
                 } ${isAnswered ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
