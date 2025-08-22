@@ -538,7 +538,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Google Maps を初期化しています...</p>
         </div>
       </div>
@@ -567,8 +567,8 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-lg font-semibold mb-4">ルート検索</h2>
         
-        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-800">
             🎓 日本史・地理に特化した教育的価値の高いスポットを優先的に検索します
           </p>
         </div>
@@ -583,7 +583,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
               placeholder="例: 東京駅"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
           <div>
@@ -595,7 +595,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               placeholder="例: 鎌倉駅"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
         </div>
@@ -603,7 +603,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
         <button
           onClick={searchRoute}
           disabled={loading}
-          className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? '検索中...' : '教育的スポットを検索'}
         </button>
@@ -612,7 +612,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
       <div className="bg-white rounded-lg shadow-md p-4">
         <div className="mb-2">
           <span className="text-sm font-medium text-gray-700">マーカーの凡例: </span>
-          <span className="text-xs text-blue-600 ml-2">● 城郭</span>
+          <span className="text-xs text-red-600 ml-2">● 城郭</span>
           <span className="text-xs text-yellow-600 ml-2">● 寺院</span>
           <span className="text-xs text-red-600 ml-2">● 神社</span>
           <span className="text-xs text-purple-600 ml-2">● 古戦場</span>

@@ -66,7 +66,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-600 mx-auto mb-4"></div>
           <p className="text-gray-600">読み込み中...</p>
         </div>
       </div>
@@ -236,7 +236,7 @@ export default function Home() {
                 <TrendingUp className="h-5 w-5 mr-2 text-red-600" />
                 ランキング
               </h2>
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+              <div className="mb-6 p-4 bg-red-50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">あなたのスコア</span>
                   <span className="text-2xl font-bold text-red-600">{userScore}点</span>
@@ -321,7 +321,7 @@ export default function Home() {
                               <span className="font-semibold text-gray-900 truncate">{spot.name}</span>
                             </div>
                             {enhancedSpot.historical_period && (
-                              <div className="text-xs text-red-600 mb-1">
+                              <div className="text-xs text-gray-600 mb-1">
                                 📅 {enhancedSpot.historical_period}
                               </div>
                             )}
@@ -334,7 +334,7 @@ export default function Home() {
                           </div>
                           <div className="flex-shrink-0 ml-2">
                             <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium
-                              ${categoryInfo.color === 'blue' ? 'bg-blue-100 text-blue-800' :
+                              ${categoryInfo.color === 'blue' ? 'bg-red-100 text-red-800' :
                                 categoryInfo.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
                                 categoryInfo.color === 'red' ? 'bg-red-100 text-red-800' :
                                 categoryInfo.color === 'purple' ? 'bg-purple-100 text-purple-800' :

@@ -43,7 +43,7 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
           <p className="text-gray-600">読み込み中...</p>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function AdminPage() {
         <div className="bg-white rounded-lg shadow p-6 mb-8">
           <h2 className="text-lg font-semibold mb-4">ログイン方法</h2>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-blue-50 rounded p-4">
+            <div className="bg-red-50 rounded p-4">
               <p className="text-sm text-gray-600">Googleログイン</p>
               <p className="text-xl font-bold text-red-600">{data?.stats?.googleUsers || 0} 人</p>
             </div>

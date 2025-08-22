@@ -74,7 +74,7 @@ function AuthErrorContent() {
             <div className="space-y-3">
               <Link
                 href="/auth/signin"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
               >
                 サインインページに戻る
               </Link>

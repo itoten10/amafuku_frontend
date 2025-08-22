@@ -237,7 +237,7 @@ export function WorkingQuizPanel({ spot, onScoreUpdate }: WorkingQuizPanelProps)
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-lg font-semibold mb-4 flex items-center">
-        <BookOpen className="h-5 w-5 mr-2 text-blue-600" />
+        <BookOpen className="h-5 w-5 mr-2 text-red-600" />
         {spot.name}のクイズ
       </h2>
 
@@ -266,14 +266,14 @@ export function WorkingQuizPanel({ spot, onScoreUpdate }: WorkingQuizPanelProps)
           <button
             onClick={generateQuiz}
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition disabled:opacity-50"
           >
             {loading ? 'クイズを生成中...' : 'クイズに挑戦！'}
           </button>
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="p-4 bg-blue-50 rounded-lg">
+          <div className="p-4 bg-red-50 rounded-lg">
             <p className="font-medium text-gray-900">{quiz.question}</p>
           </div>
 
@@ -291,7 +291,7 @@ export function WorkingQuizPanel({ spot, onScoreUpdate }: WorkingQuizPanelProps)
                       ? 'border-red-500 bg-red-50'
                       : 'border-gray-200 bg-gray-50'
                     : selectedAnswer === index
-                    ? 'border-blue-500 bg-blue-50'
+                    ? 'border-red-500 bg-red-50'
                     : 'border-gray-200 hover:border-gray-300'
                 } ${isAnswered ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
@@ -335,14 +335,14 @@ export function WorkingQuizPanel({ spot, onScoreUpdate }: WorkingQuizPanelProps)
               <button
                 onClick={submitAnswer}
                 disabled={selectedAnswer === null}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 回答する
               </button>
             ) : (
               <button
                 onClick={generateQuiz}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
+                className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
               >
                 新しいクイズ
               </button>
