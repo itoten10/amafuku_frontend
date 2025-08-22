@@ -567,9 +567,9 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-lg font-semibold mb-4">ルート検索</h2>
         
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-800">
-🗺️ ルートに応じた歴史に関するスポットを検索！スポットに応じたクイズも出すよ！
+        <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+          <p className="text-sm text-gray-700">
+🗺️ ルート沿いの歴史スポットを検索！スポットのクイズも生成！
           </p>
         </div>
 
@@ -605,7 +605,7 @@ export function EnhancedGoogleMapRoute({ onRouteFound, onSpotsFound }: EnhancedG
           disabled={loading}
           className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? '検索中...' : '教育的スポットを検索'}
+          {loading ? '検索中...' : 'ルートを検索'}
         </button>
       </div>
 

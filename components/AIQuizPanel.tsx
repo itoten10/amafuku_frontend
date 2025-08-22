@@ -130,12 +130,8 @@ export function AIQuizPanel({ spot, onScoreUpdate }: AIQuizPanelProps) {
           <div className="p-4 bg-gray-50 rounded-lg border">
             <div className="flex items-center mb-2">
               <Zap className="h-5 w-5 text-red-600 mr-2" />
-              <span className="font-medium text-red-800">各スポットのクイズを自動生成！AIクイズでは1.5倍ボーナス！</span>
+              <span className="font-medium text-gray-800">各スポットのクイズを自動生成！AIクイズでは1.5倍ボーナス！</span>
             </div>
-            <p className="text-sm text-red-700">
-              OpenAI APIが各スポット固有の詳細なクイズを自動生成します。
-              <br />AI生成クイズには<strong>1.5倍ボーナス</strong>が付きます！
-            </p>
           </div>
 
           <div>

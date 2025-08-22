@@ -135,7 +135,7 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                あなたのスコア: <span className="font-bold text-red-600">{userScore}点</span>
+                あなたのスコア: <span className="font-bold text-gray-900">{userScore}点</span>
               </div>
               
               {/* 認証済みユーザー情報 - セッション状態で条件分岐 */}
@@ -192,7 +192,7 @@ export default function Home() {
                   <h3 className="font-semibold">ルート情報</h3>
                   <button
                     onClick={handleShareToNavigation}
-                    className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors"
+                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
                   >
                     📱 ナビに共有
                   </button>
@@ -233,10 +233,10 @@ export default function Home() {
                 <TrendingUp className="h-5 w-5 mr-2 text-red-600" />
                 ランキング
               </h2>
-              <div className="mb-6 p-4 bg-red-50 rounded-lg">
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">あなたのスコア</span>
-                  <span className="text-2xl font-bold text-red-600">{userScore}点</span>
+                  <span className="text-2xl font-bold text-gray-900">{userScore}点</span>
                 </div>
               </div>
               <div className="space-y-2">
@@ -255,9 +255,9 @@ export default function Home() {
                   <span className="font-semibold">450点</span>
                 </div>
                 {userScore > 0 && (
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-red-100 border border-red-300">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-gray-100 border border-gray-300">
                     <div className="flex items-center space-x-3">
-                      <span className="text-lg font-semibold text-red-600">3位</span>
+                      <span className="text-lg font-semibold text-gray-700">3位</span>
                       <span className="font-medium">あなた</span>
                     </div>
                     <span className="font-semibold">{userScore}点</span>

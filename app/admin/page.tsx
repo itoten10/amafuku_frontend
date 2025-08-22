@@ -92,7 +92,7 @@ export default function AdminPage() {
                 <p className="text-sm text-gray-600">総ポイント</p>
                 <p className="text-2xl font-bold text-gray-900">{data?.stats?.totalPoints || 0}</p>
               </div>
-              <Trophy className="h-8 w-8 text-yellow-600" />
+              <Trophy className="h-8 w-8 text-gray-600" />
             </div>
           </div>
 
@@ -112,7 +112,7 @@ export default function AdminPage() {
                 <p className="text-sm text-gray-600">アクティブ</p>
                 <p className="text-2xl font-bold text-gray-900">{data?.stats?.activeToday || 0}</p>
               </div>
-              <Database className="h-8 w-8 text-purple-600" />
+              <Database className="h-8 w-8 text-gray-600" />
             </div>
           </div>
         </div>
