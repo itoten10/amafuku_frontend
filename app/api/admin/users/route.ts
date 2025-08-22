@@ -6,6 +6,7 @@ import { auth } from '@/auth'
 const ADMIN_EMAILS = [
   'masato.ito.w7@gmail.com',
   'masatest0819@gmail.com'
+  // 他のログインメールアドレスがあれば追加
 ]
 
 export async function GET(req: NextRequest) {
@@ -96,10 +97,21 @@ export async function GET(req: NextRequest) {
 
   } catch (error) {
     console.error('Admin API error:', error)
+    console.error('Error stack:', (error as Error).stack)
+    
+    const errorDetails = {
+      message: (error as Error).message,
+      name: (error as Error).name,
+      stack: (error as Error).stack,
+      prismaAvailable: !!prisma,
+      timestamp: new Date().toISOString()
+    }
+    
     return NextResponse.json(
       { 
         error: 'データの取得に失敗しました',
-        details: (error as Error).message 
+        details: errorDetails,
+        suggestion: 'Try accessing /api/admin/debug for more information'
       },
       { status: 500 }
     )
